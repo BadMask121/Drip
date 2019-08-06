@@ -1,0 +1,71 @@
+
+
+type Query{
+    allSales(){
+        id: ID!
+        sales: [Sales!]!
+    }
+
+    allProducts(){
+        id: ID!
+        product: [Product!]!
+    }
+
+    allOrders(){
+        id: ID!
+        order: [Order!]!
+    }
+    
+}
+
+
+type Mutation {
+    createSales(
+        name: String!
+        product: Product!
+        order: Order!
+    ) : Sales!
+
+    createProduct(
+        name: String!,
+        price: Float!, 
+        brand: String!, 
+        size: Int!, 
+        size_type: String!, 
+        category: String!
+    ) : Product!
+    
+    createOrder(
+        product: Product!,
+        date: String!,
+        status: String!,
+        quantity: Int!
+    ) : Order!
+}
+
+
+type Sales {
+    id: ID!
+    name: String!
+    product: [Product!]!
+    order: [Order!]!
+}
+
+type Product{
+    id: ID!
+    name: String!   
+    price: Float!
+    brand: String!
+    size: Int!
+    size_type: String!
+    category: String!
+}
+
+
+type Order{
+    id: ID!
+    product: [Product!]!
+    date: String!
+    status: String!
+    quantity: Int!
+}

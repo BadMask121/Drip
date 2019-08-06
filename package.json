@@ -1,0 +1,18 @@
+{
+  "name": "drip",
+  "version": "1.0.0",
+  "description": "Fashion Sales",
+  "main": "app.js",
+  "scripts": {
+    "app": "node src/app.js",
+    "test": "mocha /test/src/dripTest.js --recursive || true"
+  },
+  "author": "Emakpor Jeffrey",
+  "license": "MIT",
+  "dependencies": {
+    "chai": "^4.2.0",
+    "graphql-yoga": "^1.18.1",
+    "mocha": "^6.2.0",
+    "prisma": "^1.34.3"
+  }
+}
