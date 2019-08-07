@@ -1,7 +1,9 @@
-const dripResolver = require('./resolver/dripResolver')
+const Query = require('./resolver/Query')
+const Mutants = require('./resolver/Mutant')
+// const Query = require('./resolver/Query')
 
-
-
-module.exports = {
-    dripResolver
+const resolvers = {
+    Query,
+    Mutation:Mutants
 }
+module.exports = resolvers
