@@ -1,18 +1,13 @@
 
-const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const {
+    access_secret
+} = require('../../config') //get ACCESS_SECRET key from config
 
-const errorHandler = require('../misc/errorHandler')
+const errorHandler = require('./error/errorHandler') // out custom errorHandler
 
 //get out secret key for authorization from server
-const ACCESS_SECRET = process.env.ACCESS_SECRET
-
-
-
-const Helper = {
-    ACCESS_SECRET,
-    getVendorId
-}
+const ACCESS_SECRET = access_secret
 
 function getVendorId (context) {
     const auth = context.request.get('Authorization')
@@ -27,4 +22,7 @@ function getVendorId (context) {
 }
 
 
-module.exports = Helper
+module.exports = {
+    ACCESS_SECRET,
+    getVendorId
+}

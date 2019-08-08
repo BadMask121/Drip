@@ -1,3 +1,6 @@
+const InvalidException = require('./InvalidException')
+const NullException = require('./NullException')
+
 class ErrorHandler extends Error{
 
     constructor(message) {
@@ -10,4 +13,8 @@ class ErrorHandler extends Error{
     }
 }
 
-module.exports = ErrorHandler
+module.exports = {
+    ErrorHandler,
+    InvalidException,
+    NullException
+}

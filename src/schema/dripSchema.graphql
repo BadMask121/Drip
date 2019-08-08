@@ -3,16 +3,19 @@
 
 # Queries for all schema
 type Query{
-    getVendors: [Vendor!]!
+    getVendors (id : ID! ): [Vendor!]!
     getProducts: [Product!]!
-    getOrders: [Order!]!
+    getOrders(vendorId: ID!): [Order!]!
 }
 
-
+#payload schema
 type AuthPaylod{
     token: String
-    vendor: Vendor
+    vendorId: String!
 }
+
+
+
 
 # Vendors Schema
 type Vendor{
@@ -20,7 +23,6 @@ type Vendor{
     name: String!
     username: String!
     password: String!
-    orders: [Order]
 }
 # Product Schema
 type Product{
@@ -35,12 +37,17 @@ type Product{
 # Order Schema
 type Order{
     id: ID!
-    vendor: Vendor
-    product: Product
+    vendor: Vendor!
+    product: Product!
     date: String!
     status: String!
     quantity: Int!
 }
+
+
+
+
+
 
 # Vendors input schema for mutations
 input inputVendor{
@@ -48,7 +55,6 @@ input inputVendor{
     name: String!
     username: String!
     password: String!
-    orders: [inputOrder]
 }
 # Product input schema for mutations
 input inputProduct{
@@ -63,20 +69,23 @@ input inputProduct{
 # Order input schema for mutations
 input inputOrder{
     id: ID!
-    vendor: inputVendor
-    product: inputProduct
+    vendor: inputVendor!
+    product: inputProduct!
     date: String!
     status: String!
     quantity: Int!
 }
 
 
+
+
+
+
 type Mutation{
     createVendor(
         name: String!,
-        username: String!,
+        username: String,
         password: String!,
-        orders: [inputOrder]
     ): AuthPaylod!
 
     createProduct(
@@ -89,12 +98,17 @@ type Mutation{
     ): Product!
 
     createOrder(
-        vendor: [inputVendor!]!,
-        product: [inputProduct!]!,
+        vendor: inputVendor!,
+        product: inputProduct!,
         date: String!,
         status: String!,
         quantity: Int!
     ):Order!
+
+    createAuthPaylod(
+        token: String
+        vendor: inputVendor
+    ):AuthPaylod!
 
     vendorExist(
         id: ID!,

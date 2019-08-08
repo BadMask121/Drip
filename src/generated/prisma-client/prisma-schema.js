@@ -3,7 +3,11 @@ module.exports = {
   // Please don't change this file manually but run `prisma generate` to update it.
   // For more information, please read the docs: https://www.prisma.io/docs/prisma-client/
 
-/* GraphQL */ `type AggregateOrder {
+/* GraphQL */ `type AggregateAuthPaylod {
+  count: Int!
+}
+
+type AggregateOrder {
   count: Int!
 }
 
@@ -15,6 +19,124 @@ type AggregateVendor {
   count: Int!
 }
 
+type AuthPaylod {
+  id: ID!
+  token: String
+  vendorId: String!
+}
+
+type AuthPaylodConnection {
+  pageInfo: PageInfo!
+  edges: [AuthPaylodEdge]!
+  aggregate: AggregateAuthPaylod!
+}
+
+input AuthPaylodCreateInput {
+  id: ID
+  token: String
+  vendorId: String!
+}
+
+type AuthPaylodEdge {
+  node: AuthPaylod!
+  cursor: String!
+}
+
+enum AuthPaylodOrderByInput {
+  id_ASC
+  id_DESC
+  token_ASC
+  token_DESC
+  vendorId_ASC
+  vendorId_DESC
+}
+
+type AuthPaylodPreviousValues {
+  id: ID!
+  token: String
+  vendorId: String!
+}
+
+type AuthPaylodSubscriptionPayload {
+  mutation: MutationType!
+  node: AuthPaylod
+  updatedFields: [String!]
+  previousValues: AuthPaylodPreviousValues
+}
+
+input AuthPaylodSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: AuthPaylodWhereInput
+  AND: [AuthPaylodSubscriptionWhereInput!]
+  OR: [AuthPaylodSubscriptionWhereInput!]
+  NOT: [AuthPaylodSubscriptionWhereInput!]
+}
+
+input AuthPaylodUpdateInput {
+  token: String
+  vendorId: String
+}
+
+input AuthPaylodUpdateManyMutationInput {
+  token: String
+  vendorId: String
+}
+
+input AuthPaylodWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  token: String
+  token_not: String
+  token_in: [String!]
+  token_not_in: [String!]
+  token_lt: String
+  token_lte: String
+  token_gt: String
+  token_gte: String
+  token_contains: String
+  token_not_contains: String
+  token_starts_with: String
+  token_not_starts_with: String
+  token_ends_with: String
+  token_not_ends_with: String
+  vendorId: String
+  vendorId_not: String
+  vendorId_in: [String!]
+  vendorId_not_in: [String!]
+  vendorId_lt: String
+  vendorId_lte: String
+  vendorId_gt: String
+  vendorId_gte: String
+  vendorId_contains: String
+  vendorId_not_contains: String
+  vendorId_starts_with: String
+  vendorId_not_starts_with: String
+  vendorId_ends_with: String
+  vendorId_not_ends_with: String
+  AND: [AuthPaylodWhereInput!]
+  OR: [AuthPaylodWhereInput!]
+  NOT: [AuthPaylodWhereInput!]
+}
+
+input AuthPaylodWhereUniqueInput {
+  id: ID
+}
+
 type BatchPayload {
   count: Long!
 }
@@ -24,6 +146,12 @@ scalar DateTime
 scalar Long
 
 type Mutation {
+  createAuthPaylod(data: AuthPaylodCreateInput!): AuthPaylod!
+  updateAuthPaylod(data: AuthPaylodUpdateInput!, where: AuthPaylodWhereUniqueInput!): AuthPaylod
+  updateManyAuthPaylods(data: AuthPaylodUpdateManyMutationInput!, where: AuthPaylodWhereInput): BatchPayload!
+  upsertAuthPaylod(where: AuthPaylodWhereUniqueInput!, create: AuthPaylodCreateInput!, update: AuthPaylodUpdateInput!): AuthPaylod!
+  deleteAuthPaylod(where: AuthPaylodWhereUniqueInput!): AuthPaylod
+  deleteManyAuthPaylods(where: AuthPaylodWhereInput): BatchPayload!
   createOrder(data: OrderCreateInput!): Order!
   updateOrder(data: OrderUpdateInput!, where: OrderWhereUniqueInput!): Order
   updateManyOrders(data: OrderUpdateManyMutationInput!, where: OrderWhereInput): BatchPayload!
@@ -72,20 +200,7 @@ type OrderConnection {
 
 input OrderCreateInput {
   id: ID
-  vendor: VendorCreateOneWithoutOrdersInput
-  product: ProductCreateOneInput
-  date: String!
-  status: String!
-  quantity: Int!
-}
-
-input OrderCreateManyWithoutVendorInput {
-  create: [OrderCreateWithoutVendorInput!]
-  connect: [OrderWhereUniqueInput!]
-}
-
-input OrderCreateWithoutVendorInput {
-  id: ID
+  vendor: VendorCreateOneInput
   product: ProductCreateOneInput
   date: String!
   status: String!
@@ -118,70 +233,6 @@ type OrderPreviousValues {
   createdAt: DateTime
 }
 
-input OrderScalarWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  date: String
-  date_not: String
-  date_in: [String!]
-  date_not_in: [String!]
-  date_lt: String
-  date_lte: String
-  date_gt: String
-  date_gte: String
-  date_contains: String
-  date_not_contains: String
-  date_starts_with: String
-  date_not_starts_with: String
-  date_ends_with: String
-  date_not_ends_with: String
-  status: String
-  status_not: String
-  status_in: [String!]
-  status_not_in: [String!]
-  status_lt: String
-  status_lte: String
-  status_gt: String
-  status_gte: String
-  status_contains: String
-  status_not_contains: String
-  status_starts_with: String
-  status_not_starts_with: String
-  status_ends_with: String
-  status_not_ends_with: String
-  quantity: Int
-  quantity_not: Int
-  quantity_in: [Int!]
-  quantity_not_in: [Int!]
-  quantity_lt: Int
-  quantity_lte: Int
-  quantity_gt: Int
-  quantity_gte: Int
-  createdAt: DateTime
-  createdAt_not: DateTime
-  createdAt_in: [DateTime!]
-  createdAt_not_in: [DateTime!]
-  createdAt_lt: DateTime
-  createdAt_lte: DateTime
-  createdAt_gt: DateTime
-  createdAt_gte: DateTime
-  AND: [OrderScalarWhereInput!]
-  OR: [OrderScalarWhereInput!]
-  NOT: [OrderScalarWhereInput!]
-}
-
 type OrderSubscriptionPayload {
   mutation: MutationType!
   node: Order
@@ -201,14 +252,8 @@ input OrderSubscriptionWhereInput {
 }
 
 input OrderUpdateInput {
-  vendor: VendorUpdateOneWithoutOrdersInput
+  vendor: VendorUpdateOneInput
   product: ProductUpdateOneInput
-  date: String
-  status: String
-  quantity: Int
-}
-
-input OrderUpdateManyDataInput {
   date: String
   status: String
   quantity: Int
@@ -218,41 +263,6 @@ input OrderUpdateManyMutationInput {
   date: String
   status: String
   quantity: Int
-}
-
-input OrderUpdateManyWithoutVendorInput {
-  create: [OrderCreateWithoutVendorInput!]
-  delete: [OrderWhereUniqueInput!]
-  connect: [OrderWhereUniqueInput!]
-  set: [OrderWhereUniqueInput!]
-  disconnect: [OrderWhereUniqueInput!]
-  update: [OrderUpdateWithWhereUniqueWithoutVendorInput!]
-  upsert: [OrderUpsertWithWhereUniqueWithoutVendorInput!]
-  deleteMany: [OrderScalarWhereInput!]
-  updateMany: [OrderUpdateManyWithWhereNestedInput!]
-}
-
-input OrderUpdateManyWithWhereNestedInput {
-  where: OrderScalarWhereInput!
-  data: OrderUpdateManyDataInput!
-}
-
-input OrderUpdateWithoutVendorDataInput {
-  product: ProductUpdateOneInput
-  date: String
-  status: String
-  quantity: Int
-}
-
-input OrderUpdateWithWhereUniqueWithoutVendorInput {
-  where: OrderWhereUniqueInput!
-  data: OrderUpdateWithoutVendorDataInput!
-}
-
-input OrderUpsertWithWhereUniqueWithoutVendorInput {
-  where: OrderWhereUniqueInput!
-  update: OrderUpdateWithoutVendorDataInput!
-  create: OrderCreateWithoutVendorInput!
 }
 
 input OrderWhereInput {
@@ -563,6 +573,9 @@ input ProductWhereUniqueInput {
 }
 
 type Query {
+  authPaylod(where: AuthPaylodWhereUniqueInput!): AuthPaylod
+  authPaylods(where: AuthPaylodWhereInput, orderBy: AuthPaylodOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [AuthPaylod]!
+  authPaylodsConnection(where: AuthPaylodWhereInput, orderBy: AuthPaylodOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AuthPaylodConnection!
   order(where: OrderWhereUniqueInput!): Order
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order]!
   ordersConnection(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrderConnection!
@@ -576,6 +589,7 @@ type Query {
 }
 
 type Subscription {
+  authPaylod(where: AuthPaylodSubscriptionWhereInput): AuthPaylodSubscriptionPayload
   order(where: OrderSubscriptionWhereInput): OrderSubscriptionPayload
   product(where: ProductSubscriptionWhereInput): ProductSubscriptionPayload
   vendor(where: VendorSubscriptionWhereInput): VendorSubscriptionPayload
@@ -584,7 +598,8 @@ type Subscription {
 type Vendor {
   id: ID!
   name: String!
-  orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order!]
+  username: String!
+  password: String!
   createdAt: DateTime
 }
 
@@ -597,17 +612,13 @@ type VendorConnection {
 input VendorCreateInput {
   id: ID
   name: String!
-  orders: OrderCreateManyWithoutVendorInput
+  username: String!
+  password: String!
 }
 
-input VendorCreateOneWithoutOrdersInput {
-  create: VendorCreateWithoutOrdersInput
+input VendorCreateOneInput {
+  create: VendorCreateInput
   connect: VendorWhereUniqueInput
-}
-
-input VendorCreateWithoutOrdersInput {
-  id: ID
-  name: String!
 }
 
 type VendorEdge {
@@ -620,6 +631,10 @@ enum VendorOrderByInput {
   id_DESC
   name_ASC
   name_DESC
+  username_ASC
+  username_DESC
+  password_ASC
+  password_DESC
   createdAt_ASC
   createdAt_DESC
 }
@@ -627,6 +642,8 @@ enum VendorOrderByInput {
 type VendorPreviousValues {
   id: ID!
   name: String!
+  username: String!
+  password: String!
   createdAt: DateTime
 }
 
@@ -648,31 +665,36 @@ input VendorSubscriptionWhereInput {
   NOT: [VendorSubscriptionWhereInput!]
 }
 
+input VendorUpdateDataInput {
+  name: String
+  username: String
+  password: String
+}
+
 input VendorUpdateInput {
   name: String
-  orders: OrderUpdateManyWithoutVendorInput
+  username: String
+  password: String
 }
 
 input VendorUpdateManyMutationInput {
   name: String
+  username: String
+  password: String
 }
 
-input VendorUpdateOneWithoutOrdersInput {
-  create: VendorCreateWithoutOrdersInput
-  update: VendorUpdateWithoutOrdersDataInput
-  upsert: VendorUpsertWithoutOrdersInput
+input VendorUpdateOneInput {
+  create: VendorCreateInput
+  update: VendorUpdateDataInput
+  upsert: VendorUpsertNestedInput
   delete: Boolean
   disconnect: Boolean
   connect: VendorWhereUniqueInput
 }
 
-input VendorUpdateWithoutOrdersDataInput {
-  name: String
-}
-
-input VendorUpsertWithoutOrdersInput {
-  update: VendorUpdateWithoutOrdersDataInput!
-  create: VendorCreateWithoutOrdersInput!
+input VendorUpsertNestedInput {
+  update: VendorUpdateDataInput!
+  create: VendorCreateInput!
 }
 
 input VendorWhereInput {
@@ -704,9 +726,34 @@ input VendorWhereInput {
   name_not_starts_with: String
   name_ends_with: String
   name_not_ends_with: String
-  orders_every: OrderWhereInput
-  orders_some: OrderWhereInput
-  orders_none: OrderWhereInput
+  username: String
+  username_not: String
+  username_in: [String!]
+  username_not_in: [String!]
+  username_lt: String
+  username_lte: String
+  username_gt: String
+  username_gte: String
+  username_contains: String
+  username_not_contains: String
+  username_starts_with: String
+  username_not_starts_with: String
+  username_ends_with: String
+  username_not_ends_with: String
+  password: String
+  password_not: String
+  password_in: [String!]
+  password_not_in: [String!]
+  password_lt: String
+  password_lte: String
+  password_gt: String
+  password_gte: String
+  password_contains: String
+  password_not_contains: String
+  password_starts_with: String
+  password_not_starts_with: String
+  password_ends_with: String
+  password_not_ends_with: String
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]
@@ -722,6 +769,7 @@ input VendorWhereInput {
 
 input VendorWhereUniqueInput {
   id: ID
+  username: String
 }
 `
       }

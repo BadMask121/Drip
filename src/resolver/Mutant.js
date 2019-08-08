@@ -1,33 +1,40 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const errorHandler = require('../misc/errorHandler')
+const {NullException , InvalidException, ErrorHandler} = require('../misc/error/errorHandler')
 
 
 const {ACCESS_SECRET}  = require('../misc/helpers')
-
 
 async function createVendor($, args, context, info){
 
     const vendorExist = await context.prisma.vendor({username: args.username})
 
     if (vendorExist)
-        throw new errorHandler("Vendor already exists")
+        throw new ErrorHandler("Vendor already exists")
         
-    //hash password
-    const password =  await bcrypt.hash(args.password, 20)
-    
-    //store password to our passed argument object
-    args.password = password;
-
+    //hash password with 10 rotation of salting
+    const password =  await bcrypt.hash(args.password, 10)
     //create vendor details
     const vendor = await context.prisma.createVendor({
-        ...args
+        ...args,
+        password
     })
 
-    //tokenize our ip for authorization
-    const token = jwt.sign({vendorId: vendor.id }, ACCESS_SECRET)
+    //get vendor id from created vendor object
+    let vendorId = vendor.id
+    // tokenize our ip for authorization
+    const token = jwt.sign({vendorId: vendorId }, ACCESS_SECRET)
+    
+    // //insert our token details to database for debugging reasons 
+    const insertToken = await context.prisma.createAuthPaylod({
+        token,
+        vendorId
+    })
 
-
+        if(!token)
+            throw new NullException("token not generated")
+                if(!insertToken)
+                    throw new InvalidException("token generated but not inserted")
     return {
         token,
         vendor

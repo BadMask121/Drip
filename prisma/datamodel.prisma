@@ -1,0 +1,37 @@
+
+
+
+type AuthPaylod{
+    id: ID! @id
+    token: String
+    vendorId: String!
+}
+
+type Vendor {
+    id: ID! @id
+    name: String!
+    username: String! @unique
+    password: String!
+    createdAt: DateTime @createdAt
+}
+
+type Product{
+    id: ID! @id
+    name: String!   
+    price: Float!
+    brand: String!
+    size: Int!
+    size_type: String!
+    category: String!
+    createdAt: DateTime @createdAt
+}
+
+type Order{
+    id: ID! @id
+    vendor: Vendor @relation( name: "Vendor")
+    product: Product @relation( name: "Product")
+    date: String!
+    status: String!
+    quantity: Int!
+    createdAt: DateTime @createdAt
+}
