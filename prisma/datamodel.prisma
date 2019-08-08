@@ -1,7 +1,7 @@
 
 
 
-type AuthPaylod{
+type AuthPayload{
     id: ID! @id
     token: String
     vendor: Vendor!
@@ -30,8 +30,9 @@ type Order{
     id: ID! @id
     vendor: Vendor @relation( name: "Vendor")
     product: Product @relation( name: "Product")
-    date: String!
     status: String!
     quantity: Int!
+    total_cost: Float!
+    currency: String!
     createdAt: DateTime @createdAt
 }

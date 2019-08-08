@@ -3,7 +3,7 @@ module.exports = {
   // Please don't change this file manually but run `prisma generate` to update it.
   // For more information, please read the docs: https://www.prisma.io/docs/prisma-client/
 
-/* GraphQL */ `type AggregateAuthPaylod {
+/* GraphQL */ `type AggregateAuthPayload {
   count: Int!
 }
 
@@ -19,69 +19,69 @@ type AggregateVendor {
   count: Int!
 }
 
-type AuthPaylod {
+type AuthPayload {
   id: ID!
   token: String
   vendor: Vendor!
 }
 
-type AuthPaylodConnection {
+type AuthPayloadConnection {
   pageInfo: PageInfo!
-  edges: [AuthPaylodEdge]!
-  aggregate: AggregateAuthPaylod!
+  edges: [AuthPayloadEdge]!
+  aggregate: AggregateAuthPayload!
 }
 
-input AuthPaylodCreateInput {
+input AuthPayloadCreateInput {
   id: ID
   token: String
   vendor: VendorCreateOneInput!
 }
 
-type AuthPaylodEdge {
-  node: AuthPaylod!
+type AuthPayloadEdge {
+  node: AuthPayload!
   cursor: String!
 }
 
-enum AuthPaylodOrderByInput {
+enum AuthPayloadOrderByInput {
   id_ASC
   id_DESC
   token_ASC
   token_DESC
 }
 
-type AuthPaylodPreviousValues {
+type AuthPayloadPreviousValues {
   id: ID!
   token: String
 }
 
-type AuthPaylodSubscriptionPayload {
+type AuthPayloadSubscriptionPayload {
   mutation: MutationType!
-  node: AuthPaylod
+  node: AuthPayload
   updatedFields: [String!]
-  previousValues: AuthPaylodPreviousValues
+  previousValues: AuthPayloadPreviousValues
 }
 
-input AuthPaylodSubscriptionWhereInput {
+input AuthPayloadSubscriptionWhereInput {
   mutation_in: [MutationType!]
   updatedFields_contains: String
   updatedFields_contains_every: [String!]
   updatedFields_contains_some: [String!]
-  node: AuthPaylodWhereInput
-  AND: [AuthPaylodSubscriptionWhereInput!]
-  OR: [AuthPaylodSubscriptionWhereInput!]
-  NOT: [AuthPaylodSubscriptionWhereInput!]
+  node: AuthPayloadWhereInput
+  AND: [AuthPayloadSubscriptionWhereInput!]
+  OR: [AuthPayloadSubscriptionWhereInput!]
+  NOT: [AuthPayloadSubscriptionWhereInput!]
 }
 
-input AuthPaylodUpdateInput {
+input AuthPayloadUpdateInput {
   token: String
   vendor: VendorUpdateOneRequiredInput
 }
 
-input AuthPaylodUpdateManyMutationInput {
+input AuthPayloadUpdateManyMutationInput {
   token: String
 }
 
-input AuthPaylodWhereInput {
+input AuthPayloadWhereInput {
   id: ID
   id_not: ID
   id_in: [ID!]
@@ -111,12 +111,12 @@ input AuthPaylodWhereInput {
   token_ends_with: String
   token_not_ends_with: String
   vendor: VendorWhereInput
-  AND: [AuthPaylodWhereInput!]
-  OR: [AuthPaylodWhereInput!]
-  NOT: [AuthPaylodWhereInput!]
+  AND: [AuthPayloadWhereInput!]
+  OR: [AuthPayloadWhereInput!]
+  NOT: [AuthPayloadWhereInput!]
 }
 
-input AuthPaylodWhereUniqueInput {
+input AuthPayloadWhereUniqueInput {
   id: ID
 }
 
@@ -129,12 +129,12 @@ scalar DateTime
 scalar Long
 
 type Mutation {
-  createAuthPaylod(data: AuthPaylodCreateInput!): AuthPaylod!
-  updateAuthPaylod(data: AuthPaylodUpdateInput!, where: AuthPaylodWhereUniqueInput!): AuthPaylod
-  updateManyAuthPaylods(data: AuthPaylodUpdateManyMutationInput!, where: AuthPaylodWhereInput): BatchPayload!
-  upsertAuthPaylod(where: AuthPaylodWhereUniqueInput!, create: AuthPaylodCreateInput!, update: AuthPaylodUpdateInput!): AuthPaylod!
-  deleteAuthPaylod(where: AuthPaylodWhereUniqueInput!): AuthPaylod
-  deleteManyAuthPaylods(where: AuthPaylodWhereInput): BatchPayload!
+  createAuthPayload(data: AuthPayloadCreateInput!): AuthPayload!
+  updateAuthPayload(data: AuthPayloadUpdateInput!, where: AuthPayloadWhereUniqueInput!): AuthPayload
+  updateManyAuthPayloads(data: AuthPayloadUpdateManyMutationInput!, where: AuthPayloadWhereInput): BatchPayload!
+  upsertAuthPayload(where: AuthPayloadWhereUniqueInput!, create: AuthPayloadCreateInput!, update: AuthPayloadUpdateInput!): AuthPayload!
+  deleteAuthPayload(where: AuthPayloadWhereUniqueInput!): AuthPayload
+  deleteManyAuthPayloads(where: AuthPayloadWhereInput): BatchPayload!
   createOrder(data: OrderCreateInput!): Order!
   updateOrder(data: OrderUpdateInput!, where: OrderWhereUniqueInput!): Order
   updateManyOrders(data: OrderUpdateManyMutationInput!, where: OrderWhereInput): BatchPayload!
@@ -169,9 +169,10 @@ type Order {
   id: ID!
   vendor: Vendor
   product: Product
-  date: String!
   status: String!
   quantity: Int!
+  total_cost: Float!
+  currency: String!
   createdAt: DateTime
 }
 
@@ -185,9 +186,10 @@ input OrderCreateInput {
   id: ID
   vendor: VendorCreateOneInput
   product: ProductCreateOneInput
-  date: String!
   status: String!
   quantity: Int!
+  total_cost: Float!
+  currency: String!
 }
 
 type OrderEdge {
@@ -198,21 +200,24 @@ type OrderEdge {
 enum OrderOrderByInput {
   id_ASC
   id_DESC
-  date_ASC
-  date_DESC
   status_ASC
   status_DESC
   quantity_ASC
   quantity_DESC
+  total_cost_ASC
+  total_cost_DESC
+  currency_ASC
+  currency_DESC
   createdAt_ASC
   createdAt_DESC
 }
 
 type OrderPreviousValues {
   id: ID!
-  date: String!
   status: String!
   quantity: Int!
+  total_cost: Float!
+  currency: String!
   createdAt: DateTime
 }
 
@@ -237,15 +242,17 @@ input OrderSubscriptionWhereInput {
 input OrderUpdateInput {
   vendor: VendorUpdateOneInput
   product: ProductUpdateOneInput
-  date: String
   status: String
   quantity: Int
+  total_cost: Float
+  currency: String
 }
 
 input OrderUpdateManyMutationInput {
-  date: String
   status: String
   quantity: Int
+  total_cost: Float
+  currency: String
 }
 
 input OrderWhereInput {
@@ -265,20 +272,6 @@ input OrderWhereInput {
   id_not_ends_with: ID
   vendor: VendorWhereInput
   product: ProductWhereInput
-  date: String
-  date_not: String
-  date_in: [String!]
-  date_not_in: [String!]
-  date_lt: String
-  date_lte: String
-  date_gt: String
-  date_gte: String
-  date_contains: String
-  date_not_contains: String
-  date_starts_with: String
-  date_not_starts_with: String
-  date_ends_with: String
-  date_not_ends_with: String
   status: String
   status_not: String
   status_in: [String!]
@@ -301,6 +294,28 @@ input OrderWhereInput {
   quantity_lte: Int
   quantity_gt: Int
   quantity_gte: Int
+  total_cost: Float
+  total_cost_not: Float
+  total_cost_in: [Float!]
+  total_cost_not_in: [Float!]
+  total_cost_lt: Float
+  total_cost_lte: Float
+  total_cost_gt: Float
+  total_cost_gte: Float
+  currency: String
+  currency_not: String
+  currency_in: [String!]
+  currency_not_in: [String!]
+  currency_lt: String
+  currency_lte: String
+  currency_gt: String
+  currency_gte: String
+  currency_contains: String
+  currency_not_contains: String
+  currency_starts_with: String
+  currency_not_starts_with: String
+  currency_ends_with: String
+  currency_not_ends_with: String
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]
@@ -556,9 +571,9 @@ input ProductWhereUniqueInput {
 }
 
 type Query {
-  authPaylod(where: AuthPaylodWhereUniqueInput!): AuthPaylod
-  authPaylods(where: AuthPaylodWhereInput, orderBy: AuthPaylodOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [AuthPaylod]!
-  authPaylodsConnection(where: AuthPaylodWhereInput, orderBy: AuthPaylodOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AuthPaylodConnection!
+  authPayload(where: AuthPayloadWhereUniqueInput!): AuthPayload
+  authPayloads(where: AuthPayloadWhereInput, orderBy: AuthPayloadOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [AuthPayload]!
+  authPayloadsConnection(where: AuthPayloadWhereInput, orderBy: AuthPayloadOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AuthPayloadConnection!
   order(where: OrderWhereUniqueInput!): Order
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order]!
   ordersConnection(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrderConnection!
@@ -572,7 +587,7 @@ type Query {
 }
 
 type Subscription {
-  authPaylod(where: AuthPaylodSubscriptionWhereInput): AuthPaylodSubscriptionPayload
+  authPayload(where: AuthPayloadSubscriptionWhereInput): AuthPayloadSubscriptionPayload
   order(where: OrderSubscriptionWhereInput): OrderSubscriptionPayload
   product(where: ProductSubscriptionWhereInput): ProductSubscriptionPayload
   vendor(where: VendorSubscriptionWhereInput): VendorSubscriptionPayload

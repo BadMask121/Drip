@@ -10,9 +10,6 @@ const {
 } = require('../../misc/helpers')
 
 
-
-
-
 /**
  *  LEGEND
  * @param {*} $  our root variable
@@ -21,10 +18,8 @@ const {
  * @param {*} info other information to manipulate on prisma
  */
 
-
-
 //create Vendors account
-async function createVendor($, args, context, info) {
+module.exports = async function createVendor($, args, context, info) {
 
     const vendorExist = await context.prisma.vendor({
         username: args.username
@@ -48,7 +43,7 @@ async function createVendor($, args, context, info) {
     const token = await insertToken(context, {
         id: vendorId
     }).catch(err => console.warn(err))
-
+    
     return {
         token,
         vendor

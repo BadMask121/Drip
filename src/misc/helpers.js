@@ -4,7 +4,7 @@ const {
     access_secret
 } = require('../../config') //get ACCESS_SECRET key from config
 
-const {InvalidException} = require('./error/errorHandler') // out custom errorHandler
+const {InvalidException, NullException, ErrorHandler} = require('./error/errorHandler') // out custom errorHandler
 
 //get out secret key for authorization from server
 const ACCESS_SECRET = access_secret
@@ -19,8 +19,11 @@ async function insertToken(context, args) {
         args
     }, ACCESS_SECRET)
 
+        if (!token)
+            throw new NullException("token not generated")
+
     // //insert our token details to database for debugging reasons 
-    const insertToken = await context.prisma.createAuthPaylod({
+    const insertToken = await context.prisma.createAuthPayload({
         token,
         vendor: {
             connect: {
@@ -28,27 +31,30 @@ async function insertToken(context, args) {
             }
         }
     })
-    if (!token)
-        throw new NullException("token not generated")
-    if (!insertToken)
-        throw new InvalidException("token generated but not inserted")
+
+        if (!insertToken)
+            throw new InvalidException("token generated but not inserted")
 
     return token
 }
-
 
 
 //getVendorId token from Authorization header
 function getVendorId (context) {
     const auth = context.request.get('Authorization')
         if(!auth)
-            throw new InvalidException("Request not authorized")
+            throw new NullException("Please add authorization header")
 
      const token = auth.replace('Bearer ', '')
-     const {
-         vendorId
-     } = jwt.verify(token, ACCESS_SECRET)
-     
+
+        if(!token)
+            throw new NullException("token not found")
+
+     const vendorId = jwt.verify(token, ACCESS_SECRET).args.id
+    
+        if(!vendorId)
+            throw new InvalidException(`Invalid authorization token`)
+
      return vendorId
 }
 

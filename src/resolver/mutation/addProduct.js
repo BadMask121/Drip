@@ -22,7 +22,13 @@ const {
  */
 
  
-// add product to stock
-async function createProduct($, args, context, info) {
+// add product to 
+module.exports = async function addProduct($, args, context, info) {
+    const addProduct = await context.prisma.createProduct({
+        ...args
+    })
 
+    if(!addProduct)
+        throw new ErrorHandler("Product could not be added to stock")
+    return addProduct
 }

@@ -22,16 +22,17 @@ const {
  */
 
 //Vendor login resolver
-async function loginVendor($, args, context, info) {
+module.exports = async function loginVendor($, args, context, info) {
     const vendor = await context.prisma.vendor({
         username: args.username
     })
-    if (!vendor)
-        throw InvalidException("Vendor not found")
+        if (!vendor)
+            throw new InvalidException("Vendor not found")
+    
+    const validatePassword = await bcrypt.compare(args.password, vendor.password)
 
-    const validatePassword = await bcrypt.compare(args.password, user.password)
-    if (!validatePassword)
-        throw InvalidException("Invalid Username or Password")
+        if (!validatePassword)
+            throw new InvalidException("Invalid Username or Password")
 
     const vendorId = vendor.id
     //insert token to database and authorization header
@@ -39,5 +40,8 @@ async function loginVendor($, args, context, info) {
         id: vendorId
     }).catch(err => console.warn(err))
 
-    return token;
+    return {
+        token,
+        vendor
+    };
 }
