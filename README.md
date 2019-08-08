@@ -5,7 +5,7 @@ Drip is a web app for selling luxurious and high quality branded clothings with 
 
 
 # Technology
-  Backend: NodeJs, GraphQL, Prisma, Mysql
+  Backend: NodeJs, GraphQL, Prisma, Mysql.
   FrontEnd: ReactJS
   
 Author: Jeffrey Emakpor
