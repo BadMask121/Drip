@@ -4,7 +4,7 @@
 type AuthPaylod{
     id: ID! @id
     token: String
-    vendorId: String!
+    vendor: Vendor!
 }
 
 type Vendor {

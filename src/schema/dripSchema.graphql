@@ -11,7 +11,7 @@ type Query{
 #payload schema
 type AuthPaylod{
     token: String
-    vendorId: String!
+    vendor: Vendor!
 }
 
 
@@ -82,13 +82,8 @@ input inputOrder{
 
 
 type Mutation{
-    createVendor(
-        name: String!,
-        username: String,
-        password: String!,
-    ): AuthPaylod!
 
-    createProduct(
+    addProduct(
         name: String!,   
         price: Float!,
         brand: String!,
@@ -97,7 +92,23 @@ type Mutation{
         category: String!
     ): Product!
 
-    createOrder(
+    createAuthPaylod(
+        token: String
+        vendor: inputVendor
+    ):AuthPaylod!
+
+    createVendor(
+        name: String!,
+        username: String,
+        password: String!,
+    ): AuthPaylod!
+
+    loginVendor(
+        username: String!
+        password: String!
+    ): AuthPaylod!
+
+    makeOrder(
         vendor: inputVendor!,
         product: inputProduct!,
         date: String!,
@@ -105,13 +116,4 @@ type Mutation{
         quantity: Int!
     ):Order!
 
-    createAuthPaylod(
-        token: String
-        vendor: inputVendor
-    ):AuthPaylod!
-
-    vendorExist(
-        id: ID!,
-        username: String!
-    ):AuthPaylod!
 }

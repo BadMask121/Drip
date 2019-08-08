@@ -22,7 +22,7 @@ type AggregateVendor {
 type AuthPaylod {
   id: ID!
   token: String
-  vendorId: String!
+  vendor: Vendor!
 }
 
 type AuthPaylodConnection {
@@ -34,7 +34,7 @@ type AuthPaylodConnection {
 input AuthPaylodCreateInput {
   id: ID
   token: String
-  vendorId: String!
+  vendor: VendorCreateOneInput!
 }
 
 type AuthPaylodEdge {
@@ -47,14 +47,11 @@ enum AuthPaylodOrderByInput {
   id_DESC
   token_ASC
   token_DESC
-  vendorId_ASC
-  vendorId_DESC
 }
 
 type AuthPaylodPreviousValues {
   id: ID!
   token: String
-  vendorId: String!
 }
 
 type AuthPaylodSubscriptionPayload {
@@ -77,12 +74,11 @@ input AuthPaylodSubscriptionWhereInput {
 
 input AuthPaylodUpdateInput {
   token: String
-  vendorId: String
+  vendor: VendorUpdateOneRequiredInput
 }
 
 input AuthPaylodUpdateManyMutationInput {
   token: String
-  vendorId: String
 }
 
 input AuthPaylodWhereInput {
@@ -114,20 +110,7 @@ input AuthPaylodWhereInput {
   token_not_starts_with: String
   token_ends_with: String
   token_not_ends_with: String
-  vendorId: String
-  vendorId_not: String
-  vendorId_in: [String!]
-  vendorId_not_in: [String!]
-  vendorId_lt: String
-  vendorId_lte: String
-  vendorId_gt: String
-  vendorId_gte: String
-  vendorId_contains: String
-  vendorId_not_contains: String
-  vendorId_starts_with: String
-  vendorId_not_starts_with: String
-  vendorId_ends_with: String
-  vendorId_not_ends_with: String
+  vendor: VendorWhereInput
   AND: [AuthPaylodWhereInput!]
   OR: [AuthPaylodWhereInput!]
   NOT: [AuthPaylodWhereInput!]
@@ -689,6 +672,13 @@ input VendorUpdateOneInput {
   upsert: VendorUpsertNestedInput
   delete: Boolean
   disconnect: Boolean
+  connect: VendorWhereUniqueInput
+}
+
+input VendorUpdateOneRequiredInput {
+  create: VendorCreateInput
+  update: VendorUpdateDataInput
+  upsert: VendorUpsertNestedInput
   connect: VendorWhereUniqueInput
 }
 
