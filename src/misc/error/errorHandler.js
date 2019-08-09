@@ -5,7 +5,12 @@ class ErrorHandler extends Error{
 
     constructor(message) {
         super(message)
-        this.message = `ErrorHandler: ${message}`
+        this.message = {
+            ErrorHandler: {
+                message
+            }
+        }
+    
     }
 
     get getMessage(){

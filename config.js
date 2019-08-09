@@ -8,5 +8,6 @@ module.exports = {
         DEVELOPMENT: "development",
         PRODUCTION: "production"
     },
-    env: process.env.NODE_ENV
+    env: process.env.NODE_ENV,
+    host: "http://localhost:4000"
 };

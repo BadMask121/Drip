@@ -3,7 +3,221 @@ module.exports = {
   // Please don't change this file manually but run `prisma generate` to update it.
   // For more information, please read the docs: https://www.prisma.io/docs/prisma-client/
 
-/* GraphQL */ `type AggregateAuthPayload {
+/* GraphQL */ `type Address {
+  id: ID!
+  street: String!
+  city: String!
+  state: String!
+  zipcode: String!
+  country: String!
+}
+
+type AddressConnection {
+  pageInfo: PageInfo!
+  edges: [AddressEdge]!
+  aggregate: AggregateAddress!
+}
+
+input AddressCreateInput {
+  id: ID
+  street: String!
+  city: String!
+  state: String!
+  zipcode: String!
+  country: String!
+}
+
+input AddressCreateOneInput {
+  create: AddressCreateInput
+  connect: AddressWhereUniqueInput
+}
+
+type AddressEdge {
+  node: Address!
+  cursor: String!
+}
+
+enum AddressOrderByInput {
+  id_ASC
+  id_DESC
+  street_ASC
+  street_DESC
+  city_ASC
+  city_DESC
+  state_ASC
+  state_DESC
+  zipcode_ASC
+  zipcode_DESC
+  country_ASC
+  country_DESC
+}
+
+type AddressPreviousValues {
+  id: ID!
+  street: String!
+  city: String!
+  state: String!
+  zipcode: String!
+  country: String!
+}
+
+type AddressSubscriptionPayload {
+  mutation: MutationType!
+  node: Address
+  updatedFields: [String!]
+  previousValues: AddressPreviousValues
+}
+
+input AddressSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: AddressWhereInput
+  AND: [AddressSubscriptionWhereInput!]
+  OR: [AddressSubscriptionWhereInput!]
+  NOT: [AddressSubscriptionWhereInput!]
+}
+
+input AddressUpdateDataInput {
+  street: String
+  city: String
+  state: String
+  zipcode: String
+  country: String
+}
+
+input AddressUpdateInput {
+  street: String
+  city: String
+  state: String
+  zipcode: String
+  country: String
+}
+
+input AddressUpdateManyMutationInput {
+  street: String
+  city: String
+  state: String
+  zipcode: String
+  country: String
+}
+
+input AddressUpdateOneRequiredInput {
+  create: AddressCreateInput
+  update: AddressUpdateDataInput
+  upsert: AddressUpsertNestedInput
+  connect: AddressWhereUniqueInput
+}
+
+input AddressUpsertNestedInput {
+  update: AddressUpdateDataInput!
+  create: AddressCreateInput!
+}
+
+input AddressWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  street: String
+  street_not: String
+  street_in: [String!]
+  street_not_in: [String!]
+  street_lt: String
+  street_lte: String
+  street_gt: String
+  street_gte: String
+  street_contains: String
+  street_not_contains: String
+  street_starts_with: String
+  street_not_starts_with: String
+  street_ends_with: String
+  street_not_ends_with: String
+  city: String
+  city_not: String
+  city_in: [String!]
+  city_not_in: [String!]
+  city_lt: String
+  city_lte: String
+  city_gt: String
+  city_gte: String
+  city_contains: String
+  city_not_contains: String
+  city_starts_with: String
+  city_not_starts_with: String
+  city_ends_with: String
+  city_not_ends_with: String
+  state: String
+  state_not: String
+  state_in: [String!]
+  state_not_in: [String!]
+  state_lt: String
+  state_lte: String
+  state_gt: String
+  state_gte: String
+  state_contains: String
+  state_not_contains: String
+  state_starts_with: String
+  state_not_starts_with: String
+  state_ends_with: String
+  state_not_ends_with: String
+  zipcode: String
+  zipcode_not: String
+  zipcode_in: [String!]
+  zipcode_not_in: [String!]
+  zipcode_lt: String
+  zipcode_lte: String
+  zipcode_gt: String
+  zipcode_gte: String
+  zipcode_contains: String
+  zipcode_not_contains: String
+  zipcode_starts_with: String
+  zipcode_not_starts_with: String
+  zipcode_ends_with: String
+  zipcode_not_ends_with: String
+  country: String
+  country_not: String
+  country_in: [String!]
+  country_not_in: [String!]
+  country_lt: String
+  country_lte: String
+  country_gt: String
+  country_gte: String
+  country_contains: String
+  country_not_contains: String
+  country_starts_with: String
+  country_not_starts_with: String
+  country_ends_with: String
+  country_not_ends_with: String
+  AND: [AddressWhereInput!]
+  OR: [AddressWhereInput!]
+  NOT: [AddressWhereInput!]
+}
+
+input AddressWhereUniqueInput {
+  id: ID
+}
+
+type AggregateAddress {
+  count: Int!
+}
+
+type AggregateAuthPayload {
+  count: Int!
+}
+
+type AggregateDelivery {
   count: Int!
 }
 
@@ -23,6 +237,7 @@ type AuthPayload {
   id: ID!
   token: String
   vendor: Vendor!
+  vendorId: String!
 }
 
 type AuthPayloadConnection {
@@ -35,6 +250,7 @@ input AuthPayloadCreateInput {
   id: ID
   token: String
   vendor: VendorCreateOneInput!
+  vendorId: String!
 }
 
 type AuthPayloadEdge {
@@ -47,11 +263,14 @@ enum AuthPayloadOrderByInput {
   id_DESC
   token_ASC
   token_DESC
+  vendorId_ASC
+  vendorId_DESC
 }
 
 type AuthPayloadPreviousValues {
   id: ID!
   token: String
+  vendorId: String!
 }
 
 type AuthPayloadSubscriptionPayload {
@@ -75,10 +294,12 @@ input AuthPayloadSubscriptionWhereInput {
 input AuthPayloadUpdateInput {
   token: String
   vendor: VendorUpdateOneRequiredInput
+  vendorId: String
 }
 
 input AuthPayloadUpdateManyMutationInput {
   token: String
+  vendorId: String
 }
 
 input AuthPayloadWhereInput {
@@ -111,6 +332,20 @@ input AuthPayloadWhereInput {
   token_ends_with: String
   token_not_ends_with: String
   vendor: VendorWhereInput
+  vendorId: String
+  vendorId_not: String
+  vendorId_in: [String!]
+  vendorId_not_in: [String!]
+  vendorId_lt: String
+  vendorId_lte: String
+  vendorId_gt: String
+  vendorId_gte: String
+  vendorId_contains: String
+  vendorId_not_contains: String
+  vendorId_starts_with: String
+  vendorId_not_starts_with: String
+  vendorId_ends_with: String
+  vendorId_not_ends_with: String
   AND: [AuthPayloadWhereInput!]
   OR: [AuthPayloadWhereInput!]
   NOT: [AuthPayloadWhereInput!]
@@ -118,6 +353,8 @@ input AuthPayloadWhereInput {
 
 input AuthPayloadWhereUniqueInput {
   id: ID
+  token: String
+  vendorId: String
 }
 
 type BatchPayload {
@@ -126,15 +363,228 @@ type BatchPayload {
 
 scalar DateTime
 
+type Delivery {
+  id: ID!
+  name: String!
+  gender: String!
+  email: String!
+  phone: String
+  address: Address!
+  createdAt: DateTime
+}
+
+type DeliveryConnection {
+  pageInfo: PageInfo!
+  edges: [DeliveryEdge]!
+  aggregate: AggregateDelivery!
+}
+
+input DeliveryCreateInput {
+  id: ID
+  name: String!
+  gender: String!
+  email: String!
+  phone: String
+  address: AddressCreateOneInput!
+}
+
+input DeliveryCreateOneInput {
+  create: DeliveryCreateInput
+  connect: DeliveryWhereUniqueInput
+}
+
+type DeliveryEdge {
+  node: Delivery!
+  cursor: String!
+}
+
+enum DeliveryOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  gender_ASC
+  gender_DESC
+  email_ASC
+  email_DESC
+  phone_ASC
+  phone_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type DeliveryPreviousValues {
+  id: ID!
+  name: String!
+  gender: String!
+  email: String!
+  phone: String
+  createdAt: DateTime
+}
+
+type DeliverySubscriptionPayload {
+  mutation: MutationType!
+  node: Delivery
+  updatedFields: [String!]
+  previousValues: DeliveryPreviousValues
+}
+
+input DeliverySubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: DeliveryWhereInput
+  AND: [DeliverySubscriptionWhereInput!]
+  OR: [DeliverySubscriptionWhereInput!]
+  NOT: [DeliverySubscriptionWhereInput!]
+}
+
+input DeliveryUpdateDataInput {
+  name: String
+  gender: String
+  email: String
+  phone: String
+  address: AddressUpdateOneRequiredInput
+}
+
+input DeliveryUpdateInput {
+  name: String
+  gender: String
+  email: String
+  phone: String
+  address: AddressUpdateOneRequiredInput
+}
+
+input DeliveryUpdateManyMutationInput {
+  name: String
+  gender: String
+  email: String
+  phone: String
+}
+
+input DeliveryUpdateOneRequiredInput {
+  create: DeliveryCreateInput
+  update: DeliveryUpdateDataInput
+  upsert: DeliveryUpsertNestedInput
+  connect: DeliveryWhereUniqueInput
+}
+
+input DeliveryUpsertNestedInput {
+  update: DeliveryUpdateDataInput!
+  create: DeliveryCreateInput!
+}
+
+input DeliveryWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  gender: String
+  gender_not: String
+  gender_in: [String!]
+  gender_not_in: [String!]
+  gender_lt: String
+  gender_lte: String
+  gender_gt: String
+  gender_gte: String
+  gender_contains: String
+  gender_not_contains: String
+  gender_starts_with: String
+  gender_not_starts_with: String
+  gender_ends_with: String
+  gender_not_ends_with: String
+  email: String
+  email_not: String
+  email_in: [String!]
+  email_not_in: [String!]
+  email_lt: String
+  email_lte: String
+  email_gt: String
+  email_gte: String
+  email_contains: String
+  email_not_contains: String
+  email_starts_with: String
+  email_not_starts_with: String
+  email_ends_with: String
+  email_not_ends_with: String
+  phone: String
+  phone_not: String
+  phone_in: [String!]
+  phone_not_in: [String!]
+  phone_lt: String
+  phone_lte: String
+  phone_gt: String
+  phone_gte: String
+  phone_contains: String
+  phone_not_contains: String
+  phone_starts_with: String
+  phone_not_starts_with: String
+  phone_ends_with: String
+  phone_not_ends_with: String
+  address: AddressWhereInput
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  AND: [DeliveryWhereInput!]
+  OR: [DeliveryWhereInput!]
+  NOT: [DeliveryWhereInput!]
+}
+
+input DeliveryWhereUniqueInput {
+  id: ID
+}
+
 scalar Long
 
 type Mutation {
+  createAddress(data: AddressCreateInput!): Address!
+  updateAddress(data: AddressUpdateInput!, where: AddressWhereUniqueInput!): Address
+  updateManyAddresses(data: AddressUpdateManyMutationInput!, where: AddressWhereInput): BatchPayload!
+  upsertAddress(where: AddressWhereUniqueInput!, create: AddressCreateInput!, update: AddressUpdateInput!): Address!
+  deleteAddress(where: AddressWhereUniqueInput!): Address
+  deleteManyAddresses(where: AddressWhereInput): BatchPayload!
   createAuthPayload(data: AuthPayloadCreateInput!): AuthPayload!
   updateAuthPayload(data: AuthPayloadUpdateInput!, where: AuthPayloadWhereUniqueInput!): AuthPayload
   updateManyAuthPayloads(data: AuthPayloadUpdateManyMutationInput!, where: AuthPayloadWhereInput): BatchPayload!
   upsertAuthPayload(where: AuthPayloadWhereUniqueInput!, create: AuthPayloadCreateInput!, update: AuthPayloadUpdateInput!): AuthPayload!
   deleteAuthPayload(where: AuthPayloadWhereUniqueInput!): AuthPayload
   deleteManyAuthPayloads(where: AuthPayloadWhereInput): BatchPayload!
+  createDelivery(data: DeliveryCreateInput!): Delivery!
+  updateDelivery(data: DeliveryUpdateInput!, where: DeliveryWhereUniqueInput!): Delivery
+  updateManyDeliveries(data: DeliveryUpdateManyMutationInput!, where: DeliveryWhereInput): BatchPayload!
+  upsertDelivery(where: DeliveryWhereUniqueInput!, create: DeliveryCreateInput!, update: DeliveryUpdateInput!): Delivery!
+  deleteDelivery(where: DeliveryWhereUniqueInput!): Delivery
+  deleteManyDeliveries(where: DeliveryWhereInput): BatchPayload!
   createOrder(data: OrderCreateInput!): Order!
   updateOrder(data: OrderUpdateInput!, where: OrderWhereUniqueInput!): Order
   updateManyOrders(data: OrderUpdateManyMutationInput!, where: OrderWhereInput): BatchPayload!
@@ -173,6 +623,7 @@ type Order {
   quantity: Int!
   total_cost: Float!
   currency: String!
+  delivery: Delivery!
   createdAt: DateTime
 }
 
@@ -190,6 +641,7 @@ input OrderCreateInput {
   quantity: Int!
   total_cost: Float!
   currency: String!
+  delivery: DeliveryCreateOneInput!
 }
 
 type OrderEdge {
@@ -246,6 +698,7 @@ input OrderUpdateInput {
   quantity: Int
   total_cost: Float
   currency: String
+  delivery: DeliveryUpdateOneRequiredInput
 }
 
 input OrderUpdateManyMutationInput {
@@ -316,6 +769,7 @@ input OrderWhereInput {
   currency_not_starts_with: String
   currency_ends_with: String
   currency_not_ends_with: String
+  delivery: DeliveryWhereInput
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]
@@ -571,9 +1025,15 @@ input ProductWhereUniqueInput {
 }
 
 type Query {
+  address(where: AddressWhereUniqueInput!): Address
+  addresses(where: AddressWhereInput, orderBy: AddressOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Address]!
+  addressesConnection(where: AddressWhereInput, orderBy: AddressOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AddressConnection!
   authPayload(where: AuthPayloadWhereUniqueInput!): AuthPayload
   authPayloads(where: AuthPayloadWhereInput, orderBy: AuthPayloadOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [AuthPayload]!
   authPayloadsConnection(where: AuthPayloadWhereInput, orderBy: AuthPayloadOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AuthPayloadConnection!
+  delivery(where: DeliveryWhereUniqueInput!): Delivery
+  deliveries(where: DeliveryWhereInput, orderBy: DeliveryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Delivery]!
+  deliveriesConnection(where: DeliveryWhereInput, orderBy: DeliveryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DeliveryConnection!
   order(where: OrderWhereUniqueInput!): Order
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order]!
   ordersConnection(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrderConnection!
@@ -587,7 +1047,9 @@ type Query {
 }
 
 type Subscription {
+  address(where: AddressSubscriptionWhereInput): AddressSubscriptionPayload
   authPayload(where: AuthPayloadSubscriptionWhereInput): AuthPayloadSubscriptionPayload
+  delivery(where: DeliverySubscriptionWhereInput): DeliverySubscriptionPayload
   order(where: OrderSubscriptionWhereInput): OrderSubscriptionPayload
   product(where: ProductSubscriptionWhereInput): ProductSubscriptionPayload
   vendor(where: VendorSubscriptionWhereInput): VendorSubscriptionPayload

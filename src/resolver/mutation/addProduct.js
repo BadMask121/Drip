@@ -28,7 +28,7 @@ module.exports = async function addProduct($, args, context, info) {
         ...args
     })
 
-    if(!addProduct)
+    if (!addProduct || addProduct.length <= 0)
         throw new ErrorHandler("Product could not be added to stock")
     return addProduct
 }

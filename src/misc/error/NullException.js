@@ -2,7 +2,9 @@ class NullException extends Error {
     constructor(message) {
         super(message)
         this.message = {
-            NullException: message
+            NullException: {
+                message
+            }
         }
     }
 }

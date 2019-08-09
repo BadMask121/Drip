@@ -16,7 +16,9 @@ export type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> &
 export type Maybe<T> = T | undefined | null;
 
 export interface Exists {
+  address: (where?: AddressWhereInput) => Promise<boolean>;
   authPayload: (where?: AuthPayloadWhereInput) => Promise<boolean>;
+  delivery: (where?: DeliveryWhereInput) => Promise<boolean>;
   order: (where?: OrderWhereInput) => Promise<boolean>;
   product: (where?: ProductWhereInput) => Promise<boolean>;
   vendor: (where?: VendorWhereInput) => Promise<boolean>;
@@ -41,6 +43,25 @@ export interface Prisma {
    * Queries
    */
 
+  address: (where: AddressWhereUniqueInput) => AddressNullablePromise;
+  addresses: (args?: {
+    where?: AddressWhereInput;
+    orderBy?: AddressOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => FragmentableArray<Address>;
+  addressesConnection: (args?: {
+    where?: AddressWhereInput;
+    orderBy?: AddressOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => AddressConnectionPromise;
   authPayload: (
     where: AuthPayloadWhereUniqueInput
   ) => AuthPayloadNullablePromise;
@@ -62,6 +83,25 @@ export interface Prisma {
     first?: Int;
     last?: Int;
   }) => AuthPayloadConnectionPromise;
+  delivery: (where: DeliveryWhereUniqueInput) => DeliveryNullablePromise;
+  deliveries: (args?: {
+    where?: DeliveryWhereInput;
+    orderBy?: DeliveryOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => FragmentableArray<Delivery>;
+  deliveriesConnection: (args?: {
+    where?: DeliveryWhereInput;
+    orderBy?: DeliveryOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => DeliveryConnectionPromise;
   order: (where: OrderWhereUniqueInput) => OrderNullablePromise;
   orders: (args?: {
     where?: OrderWhereInput;
@@ -125,6 +165,22 @@ export interface Prisma {
    * Mutations
    */
 
+  createAddress: (data: AddressCreateInput) => AddressPromise;
+  updateAddress: (args: {
+    data: AddressUpdateInput;
+    where: AddressWhereUniqueInput;
+  }) => AddressPromise;
+  updateManyAddresses: (args: {
+    data: AddressUpdateManyMutationInput;
+    where?: AddressWhereInput;
+  }) => BatchPayloadPromise;
+  upsertAddress: (args: {
+    where: AddressWhereUniqueInput;
+    create: AddressCreateInput;
+    update: AddressUpdateInput;
+  }) => AddressPromise;
+  deleteAddress: (where: AddressWhereUniqueInput) => AddressPromise;
+  deleteManyAddresses: (where?: AddressWhereInput) => BatchPayloadPromise;
   createAuthPayload: (data: AuthPayloadCreateInput) => AuthPayloadPromise;
   updateAuthPayload: (args: {
     data: AuthPayloadUpdateInput;
@@ -143,6 +199,22 @@ export interface Prisma {
   deleteManyAuthPayloads: (
     where?: AuthPayloadWhereInput
   ) => BatchPayloadPromise;
+  createDelivery: (data: DeliveryCreateInput) => DeliveryPromise;
+  updateDelivery: (args: {
+    data: DeliveryUpdateInput;
+    where: DeliveryWhereUniqueInput;
+  }) => DeliveryPromise;
+  updateManyDeliveries: (args: {
+    data: DeliveryUpdateManyMutationInput;
+    where?: DeliveryWhereInput;
+  }) => BatchPayloadPromise;
+  upsertDelivery: (args: {
+    where: DeliveryWhereUniqueInput;
+    create: DeliveryCreateInput;
+    update: DeliveryUpdateInput;
+  }) => DeliveryPromise;
+  deleteDelivery: (where: DeliveryWhereUniqueInput) => DeliveryPromise;
+  deleteManyDeliveries: (where?: DeliveryWhereInput) => BatchPayloadPromise;
   createOrder: (data: OrderCreateInput) => OrderPromise;
   updateOrder: (args: {
     data: OrderUpdateInput;
@@ -200,9 +272,15 @@ export interface Prisma {
 }
 
 export interface Subscription {
+  address: (
+    where?: AddressSubscriptionWhereInput
+  ) => AddressSubscriptionPayloadSubscription;
   authPayload: (
     where?: AuthPayloadSubscriptionWhereInput
   ) => AuthPayloadSubscriptionPayloadSubscription;
+  delivery: (
+    where?: DeliverySubscriptionWhereInput
+  ) => DeliverySubscriptionPayloadSubscription;
   order: (
     where?: OrderSubscriptionWhereInput
   ) => OrderSubscriptionPayloadSubscription;
@@ -222,11 +300,29 @@ export interface ClientConstructor<T> {
  * Types
  */
 
+export type MutationType = "CREATED" | "UPDATED" | "DELETED";
+
 export type AuthPayloadOrderByInput =
   | "id_ASC"
   | "id_DESC"
   | "token_ASC"
-  | "token_DESC";
+  | "token_DESC"
+  | "vendorId_ASC"
+  | "vendorId_DESC";
+
+export type DeliveryOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "name_ASC"
+  | "name_DESC"
+  | "gender_ASC"
+  | "gender_DESC"
+  | "email_ASC"
+  | "email_DESC"
+  | "phone_ASC"
+  | "phone_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC";
 
 export type OrderOrderByInput =
   | "id_ASC"
@@ -241,6 +337,20 @@ export type OrderOrderByInput =
   | "currency_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC";
+
+export type AddressOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "street_ASC"
+  | "street_DESC"
+  | "city_ASC"
+  | "city_DESC"
+  | "state_ASC"
+  | "state_DESC"
+  | "zipcode_ASC"
+  | "zipcode_DESC"
+  | "country_ASC"
+  | "country_DESC";
 
 export type ProductOrderByInput =
   | "id_ASC"
@@ -272,24 +382,82 @@ export type VendorOrderByInput =
   | "createdAt_ASC"
   | "createdAt_DESC";
 
-export type MutationType = "CREATED" | "UPDATED" | "DELETED";
+export interface OrderUpdateInput {
+  vendor?: Maybe<VendorUpdateOneInput>;
+  product?: Maybe<ProductUpdateOneInput>;
+  status?: Maybe<String>;
+  quantity?: Maybe<Int>;
+  total_cost?: Maybe<Float>;
+  currency?: Maybe<String>;
+  delivery?: Maybe<DeliveryUpdateOneRequiredInput>;
+}
 
-export interface AuthPayloadCreateInput {
+export interface VendorUpsertNestedInput {
+  update: VendorUpdateDataInput;
+  create: VendorCreateInput;
+}
+
+export interface ProductCreateInput {
   id?: Maybe<ID_Input>;
-  token?: Maybe<String>;
-  vendor: VendorCreateOneInput;
+  name: String;
+  price: Float;
+  brand: String;
+  size: Int;
+  size_type: String;
+  category: String;
+}
+
+export type AddressWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface ProductCreateOneInput {
+  create?: Maybe<ProductCreateInput>;
+  connect?: Maybe<ProductWhereUniqueInput>;
+}
+
+export interface AddressSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<AddressWhereInput>;
+  AND?: Maybe<AddressSubscriptionWhereInput[] | AddressSubscriptionWhereInput>;
+  OR?: Maybe<AddressSubscriptionWhereInput[] | AddressSubscriptionWhereInput>;
+  NOT?: Maybe<AddressSubscriptionWhereInput[] | AddressSubscriptionWhereInput>;
+}
+
+export interface OrderCreateInput {
+  id?: Maybe<ID_Input>;
+  vendor?: Maybe<VendorCreateOneInput>;
+  product?: Maybe<ProductCreateOneInput>;
+  status: String;
+  quantity: Int;
+  total_cost: Float;
+  currency: String;
+  delivery: DeliveryCreateOneInput;
 }
 
 export type AuthPayloadWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
+  token?: Maybe<String>;
+  vendorId?: Maybe<String>;
 }>;
 
-export interface AuthPayloadUpdateInput {
-  token?: Maybe<String>;
-  vendor?: Maybe<VendorUpdateOneRequiredInput>;
+export type ProductWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface ProductUpdateManyMutationInput {
+  name?: Maybe<String>;
+  price?: Maybe<Float>;
+  brand?: Maybe<String>;
+  size?: Maybe<Int>;
+  size_type?: Maybe<String>;
+  category?: Maybe<String>;
 }
 
-export interface VendorWhereInput {
+export interface AddressWhereInput {
   id?: Maybe<ID_Input>;
   id_not?: Maybe<ID_Input>;
   id_in?: Maybe<ID_Input[] | ID_Input>;
@@ -304,64 +472,80 @@ export interface VendorWhereInput {
   id_not_starts_with?: Maybe<ID_Input>;
   id_ends_with?: Maybe<ID_Input>;
   id_not_ends_with?: Maybe<ID_Input>;
-  name?: Maybe<String>;
-  name_not?: Maybe<String>;
-  name_in?: Maybe<String[] | String>;
-  name_not_in?: Maybe<String[] | String>;
-  name_lt?: Maybe<String>;
-  name_lte?: Maybe<String>;
-  name_gt?: Maybe<String>;
-  name_gte?: Maybe<String>;
-  name_contains?: Maybe<String>;
-  name_not_contains?: Maybe<String>;
-  name_starts_with?: Maybe<String>;
-  name_not_starts_with?: Maybe<String>;
-  name_ends_with?: Maybe<String>;
-  name_not_ends_with?: Maybe<String>;
-  username?: Maybe<String>;
-  username_not?: Maybe<String>;
-  username_in?: Maybe<String[] | String>;
-  username_not_in?: Maybe<String[] | String>;
-  username_lt?: Maybe<String>;
-  username_lte?: Maybe<String>;
-  username_gt?: Maybe<String>;
-  username_gte?: Maybe<String>;
-  username_contains?: Maybe<String>;
-  username_not_contains?: Maybe<String>;
-  username_starts_with?: Maybe<String>;
-  username_not_starts_with?: Maybe<String>;
-  username_ends_with?: Maybe<String>;
-  username_not_ends_with?: Maybe<String>;
-  password?: Maybe<String>;
-  password_not?: Maybe<String>;
-  password_in?: Maybe<String[] | String>;
-  password_not_in?: Maybe<String[] | String>;
-  password_lt?: Maybe<String>;
-  password_lte?: Maybe<String>;
-  password_gt?: Maybe<String>;
-  password_gte?: Maybe<String>;
-  password_contains?: Maybe<String>;
-  password_not_contains?: Maybe<String>;
-  password_starts_with?: Maybe<String>;
-  password_not_starts_with?: Maybe<String>;
-  password_ends_with?: Maybe<String>;
-  password_not_ends_with?: Maybe<String>;
-  createdAt?: Maybe<DateTimeInput>;
-  createdAt_not?: Maybe<DateTimeInput>;
-  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_lt?: Maybe<DateTimeInput>;
-  createdAt_lte?: Maybe<DateTimeInput>;
-  createdAt_gt?: Maybe<DateTimeInput>;
-  createdAt_gte?: Maybe<DateTimeInput>;
-  AND?: Maybe<VendorWhereInput[] | VendorWhereInput>;
-  OR?: Maybe<VendorWhereInput[] | VendorWhereInput>;
-  NOT?: Maybe<VendorWhereInput[] | VendorWhereInput>;
+  street?: Maybe<String>;
+  street_not?: Maybe<String>;
+  street_in?: Maybe<String[] | String>;
+  street_not_in?: Maybe<String[] | String>;
+  street_lt?: Maybe<String>;
+  street_lte?: Maybe<String>;
+  street_gt?: Maybe<String>;
+  street_gte?: Maybe<String>;
+  street_contains?: Maybe<String>;
+  street_not_contains?: Maybe<String>;
+  street_starts_with?: Maybe<String>;
+  street_not_starts_with?: Maybe<String>;
+  street_ends_with?: Maybe<String>;
+  street_not_ends_with?: Maybe<String>;
+  city?: Maybe<String>;
+  city_not?: Maybe<String>;
+  city_in?: Maybe<String[] | String>;
+  city_not_in?: Maybe<String[] | String>;
+  city_lt?: Maybe<String>;
+  city_lte?: Maybe<String>;
+  city_gt?: Maybe<String>;
+  city_gte?: Maybe<String>;
+  city_contains?: Maybe<String>;
+  city_not_contains?: Maybe<String>;
+  city_starts_with?: Maybe<String>;
+  city_not_starts_with?: Maybe<String>;
+  city_ends_with?: Maybe<String>;
+  city_not_ends_with?: Maybe<String>;
+  state?: Maybe<String>;
+  state_not?: Maybe<String>;
+  state_in?: Maybe<String[] | String>;
+  state_not_in?: Maybe<String[] | String>;
+  state_lt?: Maybe<String>;
+  state_lte?: Maybe<String>;
+  state_gt?: Maybe<String>;
+  state_gte?: Maybe<String>;
+  state_contains?: Maybe<String>;
+  state_not_contains?: Maybe<String>;
+  state_starts_with?: Maybe<String>;
+  state_not_starts_with?: Maybe<String>;
+  state_ends_with?: Maybe<String>;
+  state_not_ends_with?: Maybe<String>;
+  zipcode?: Maybe<String>;
+  zipcode_not?: Maybe<String>;
+  zipcode_in?: Maybe<String[] | String>;
+  zipcode_not_in?: Maybe<String[] | String>;
+  zipcode_lt?: Maybe<String>;
+  zipcode_lte?: Maybe<String>;
+  zipcode_gt?: Maybe<String>;
+  zipcode_gte?: Maybe<String>;
+  zipcode_contains?: Maybe<String>;
+  zipcode_not_contains?: Maybe<String>;
+  zipcode_starts_with?: Maybe<String>;
+  zipcode_not_starts_with?: Maybe<String>;
+  zipcode_ends_with?: Maybe<String>;
+  zipcode_not_ends_with?: Maybe<String>;
+  country?: Maybe<String>;
+  country_not?: Maybe<String>;
+  country_in?: Maybe<String[] | String>;
+  country_not_in?: Maybe<String[] | String>;
+  country_lt?: Maybe<String>;
+  country_lte?: Maybe<String>;
+  country_gt?: Maybe<String>;
+  country_gte?: Maybe<String>;
+  country_contains?: Maybe<String>;
+  country_not_contains?: Maybe<String>;
+  country_starts_with?: Maybe<String>;
+  country_not_starts_with?: Maybe<String>;
+  country_ends_with?: Maybe<String>;
+  country_not_ends_with?: Maybe<String>;
+  AND?: Maybe<AddressWhereInput[] | AddressWhereInput>;
+  OR?: Maybe<AddressWhereInput[] | AddressWhereInput>;
+  NOT?: Maybe<AddressWhereInput[] | AddressWhereInput>;
 }
-
-export type ProductWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
 
 export interface AuthPayloadWhereInput {
   id?: Maybe<ID_Input>;
@@ -393,54 +577,30 @@ export interface AuthPayloadWhereInput {
   token_ends_with?: Maybe<String>;
   token_not_ends_with?: Maybe<String>;
   vendor?: Maybe<VendorWhereInput>;
+  vendorId?: Maybe<String>;
+  vendorId_not?: Maybe<String>;
+  vendorId_in?: Maybe<String[] | String>;
+  vendorId_not_in?: Maybe<String[] | String>;
+  vendorId_lt?: Maybe<String>;
+  vendorId_lte?: Maybe<String>;
+  vendorId_gt?: Maybe<String>;
+  vendorId_gte?: Maybe<String>;
+  vendorId_contains?: Maybe<String>;
+  vendorId_not_contains?: Maybe<String>;
+  vendorId_starts_with?: Maybe<String>;
+  vendorId_not_starts_with?: Maybe<String>;
+  vendorId_ends_with?: Maybe<String>;
+  vendorId_not_ends_with?: Maybe<String>;
   AND?: Maybe<AuthPayloadWhereInput[] | AuthPayloadWhereInput>;
   OR?: Maybe<AuthPayloadWhereInput[] | AuthPayloadWhereInput>;
   NOT?: Maybe<AuthPayloadWhereInput[] | AuthPayloadWhereInput>;
 }
 
-export interface ProductUpdateOneInput {
-  create?: Maybe<ProductCreateInput>;
-  update?: Maybe<ProductUpdateDataInput>;
-  upsert?: Maybe<ProductUpsertNestedInput>;
-  delete?: Maybe<Boolean>;
-  disconnect?: Maybe<Boolean>;
-  connect?: Maybe<ProductWhereUniqueInput>;
-}
-
-export interface VendorUpdateOneRequiredInput {
-  create?: Maybe<VendorCreateInput>;
-  update?: Maybe<VendorUpdateDataInput>;
-  upsert?: Maybe<VendorUpsertNestedInput>;
-  connect?: Maybe<VendorWhereUniqueInput>;
-}
-
-export interface VendorUpdateOneInput {
-  create?: Maybe<VendorCreateInput>;
-  update?: Maybe<VendorUpdateDataInput>;
-  upsert?: Maybe<VendorUpsertNestedInput>;
-  delete?: Maybe<Boolean>;
-  disconnect?: Maybe<Boolean>;
-  connect?: Maybe<VendorWhereUniqueInput>;
-}
-
-export interface ProductSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<ProductWhereInput>;
-  AND?: Maybe<ProductSubscriptionWhereInput[] | ProductSubscriptionWhereInput>;
-  OR?: Maybe<ProductSubscriptionWhereInput[] | ProductSubscriptionWhereInput>;
-  NOT?: Maybe<ProductSubscriptionWhereInput[] | ProductSubscriptionWhereInput>;
-}
-
-export interface OrderUpdateInput {
-  vendor?: Maybe<VendorUpdateOneInput>;
-  product?: Maybe<ProductUpdateOneInput>;
-  status?: Maybe<String>;
-  quantity?: Maybe<Int>;
-  total_cost?: Maybe<Float>;
-  currency?: Maybe<String>;
+export interface DeliveryUpdateManyMutationInput {
+  name?: Maybe<String>;
+  gender?: Maybe<String>;
+  email?: Maybe<String>;
+  phone?: Maybe<String>;
 }
 
 export interface AuthPayloadSubscriptionWhereInput {
@@ -460,39 +620,175 @@ export interface AuthPayloadSubscriptionWhereInput {
   >;
 }
 
-export interface ProductCreateInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  price: Float;
-  brand: String;
-  size: Int;
-  size_type: String;
-  category: String;
+export interface AddressUpsertNestedInput {
+  update: AddressUpdateDataInput;
+  create: AddressCreateInput;
 }
 
-export interface VendorUpdateManyMutationInput {
-  name?: Maybe<String>;
-  username?: Maybe<String>;
-  password?: Maybe<String>;
+export interface DeliveryUpsertNestedInput {
+  update: DeliveryUpdateDataInput;
+  create: DeliveryCreateInput;
 }
+
+export interface AddressUpdateDataInput {
+  street?: Maybe<String>;
+  city?: Maybe<String>;
+  state?: Maybe<String>;
+  zipcode?: Maybe<String>;
+  country?: Maybe<String>;
+}
+
+export type DeliveryWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
 
 export type VendorWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
   username?: Maybe<String>;
 }>;
 
-export interface ProductUpdateManyMutationInput {
+export interface DeliveryWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
   name?: Maybe<String>;
-  price?: Maybe<Float>;
-  brand?: Maybe<String>;
-  size?: Maybe<Int>;
-  size_type?: Maybe<String>;
-  category?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  gender?: Maybe<String>;
+  gender_not?: Maybe<String>;
+  gender_in?: Maybe<String[] | String>;
+  gender_not_in?: Maybe<String[] | String>;
+  gender_lt?: Maybe<String>;
+  gender_lte?: Maybe<String>;
+  gender_gt?: Maybe<String>;
+  gender_gte?: Maybe<String>;
+  gender_contains?: Maybe<String>;
+  gender_not_contains?: Maybe<String>;
+  gender_starts_with?: Maybe<String>;
+  gender_not_starts_with?: Maybe<String>;
+  gender_ends_with?: Maybe<String>;
+  gender_not_ends_with?: Maybe<String>;
+  email?: Maybe<String>;
+  email_not?: Maybe<String>;
+  email_in?: Maybe<String[] | String>;
+  email_not_in?: Maybe<String[] | String>;
+  email_lt?: Maybe<String>;
+  email_lte?: Maybe<String>;
+  email_gt?: Maybe<String>;
+  email_gte?: Maybe<String>;
+  email_contains?: Maybe<String>;
+  email_not_contains?: Maybe<String>;
+  email_starts_with?: Maybe<String>;
+  email_not_starts_with?: Maybe<String>;
+  email_ends_with?: Maybe<String>;
+  email_not_ends_with?: Maybe<String>;
+  phone?: Maybe<String>;
+  phone_not?: Maybe<String>;
+  phone_in?: Maybe<String[] | String>;
+  phone_not_in?: Maybe<String[] | String>;
+  phone_lt?: Maybe<String>;
+  phone_lte?: Maybe<String>;
+  phone_gt?: Maybe<String>;
+  phone_gte?: Maybe<String>;
+  phone_contains?: Maybe<String>;
+  phone_not_contains?: Maybe<String>;
+  phone_starts_with?: Maybe<String>;
+  phone_not_starts_with?: Maybe<String>;
+  phone_ends_with?: Maybe<String>;
+  phone_not_ends_with?: Maybe<String>;
+  address?: Maybe<AddressWhereInput>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  AND?: Maybe<DeliveryWhereInput[] | DeliveryWhereInput>;
+  OR?: Maybe<DeliveryWhereInput[] | DeliveryWhereInput>;
+  NOT?: Maybe<DeliveryWhereInput[] | DeliveryWhereInput>;
 }
 
-export interface ProductCreateOneInput {
+export interface ProductSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<ProductWhereInput>;
+  AND?: Maybe<ProductSubscriptionWhereInput[] | ProductSubscriptionWhereInput>;
+  OR?: Maybe<ProductSubscriptionWhereInput[] | ProductSubscriptionWhereInput>;
+  NOT?: Maybe<ProductSubscriptionWhereInput[] | ProductSubscriptionWhereInput>;
+}
+
+export interface ProductUpsertNestedInput {
+  update: ProductUpdateDataInput;
+  create: ProductCreateInput;
+}
+
+export interface AddressUpdateOneRequiredInput {
+  create?: Maybe<AddressCreateInput>;
+  update?: Maybe<AddressUpdateDataInput>;
+  upsert?: Maybe<AddressUpsertNestedInput>;
+  connect?: Maybe<AddressWhereUniqueInput>;
+}
+
+export interface ProductUpdateOneInput {
   create?: Maybe<ProductCreateInput>;
+  update?: Maybe<ProductUpdateDataInput>;
+  upsert?: Maybe<ProductUpsertNestedInput>;
+  delete?: Maybe<Boolean>;
+  disconnect?: Maybe<Boolean>;
   connect?: Maybe<ProductWhereUniqueInput>;
+}
+
+export interface DeliveryUpdateInput {
+  name?: Maybe<String>;
+  gender?: Maybe<String>;
+  email?: Maybe<String>;
+  phone?: Maybe<String>;
+  address?: Maybe<AddressUpdateOneRequiredInput>;
+}
+
+export interface VendorUpdateOneInput {
+  create?: Maybe<VendorCreateInput>;
+  update?: Maybe<VendorUpdateDataInput>;
+  upsert?: Maybe<VendorUpsertNestedInput>;
+  delete?: Maybe<Boolean>;
+  disconnect?: Maybe<Boolean>;
+  connect?: Maybe<VendorWhereUniqueInput>;
+}
+
+export interface AddressCreateOneInput {
+  create?: Maybe<AddressCreateInput>;
+  connect?: Maybe<AddressWhereUniqueInput>;
+}
+
+export interface DeliveryCreateOneInput {
+  create?: Maybe<DeliveryCreateInput>;
+  connect?: Maybe<DeliveryWhereUniqueInput>;
 }
 
 export interface ProductWhereInput {
@@ -595,14 +891,36 @@ export interface ProductWhereInput {
   NOT?: Maybe<ProductWhereInput[] | ProductWhereInput>;
 }
 
-export interface OrderCreateInput {
+export interface VendorUpdateManyMutationInput {
+  name?: Maybe<String>;
+  username?: Maybe<String>;
+  password?: Maybe<String>;
+}
+
+export interface AddressCreateInput {
   id?: Maybe<ID_Input>;
-  vendor?: Maybe<VendorCreateOneInput>;
-  product?: Maybe<ProductCreateOneInput>;
-  status: String;
-  quantity: Int;
-  total_cost: Float;
-  currency: String;
+  street: String;
+  city: String;
+  state: String;
+  zipcode: String;
+  country: String;
+}
+
+export interface ProductUpdateInput {
+  name?: Maybe<String>;
+  price?: Maybe<Float>;
+  brand?: Maybe<String>;
+  size?: Maybe<Int>;
+  size_type?: Maybe<String>;
+  category?: Maybe<String>;
+}
+
+export interface AddressUpdateInput {
+  street?: Maybe<String>;
+  city?: Maybe<String>;
+  state?: Maybe<String>;
+  zipcode?: Maybe<String>;
+  country?: Maybe<String>;
 }
 
 export interface OrderUpdateManyMutationInput {
@@ -612,8 +930,28 @@ export interface OrderUpdateManyMutationInput {
   currency?: Maybe<String>;
 }
 
-export interface AuthPayloadUpdateManyMutationInput {
-  token?: Maybe<String>;
+export interface AddressUpdateManyMutationInput {
+  street?: Maybe<String>;
+  city?: Maybe<String>;
+  state?: Maybe<String>;
+  zipcode?: Maybe<String>;
+  country?: Maybe<String>;
+}
+
+export interface DeliveryUpdateOneRequiredInput {
+  create?: Maybe<DeliveryCreateInput>;
+  update?: Maybe<DeliveryUpdateDataInput>;
+  upsert?: Maybe<DeliveryUpsertNestedInput>;
+  connect?: Maybe<DeliveryWhereUniqueInput>;
+}
+
+export interface DeliveryCreateInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  gender: String;
+  email: String;
+  phone?: Maybe<String>;
+  address: AddressCreateOneInput;
 }
 
 export interface ProductUpdateDataInput {
@@ -625,9 +963,27 @@ export interface ProductUpdateDataInput {
   category?: Maybe<String>;
 }
 
-export interface VendorUpsertNestedInput {
-  update: VendorUpdateDataInput;
-  create: VendorCreateInput;
+export interface AuthPayloadUpdateManyMutationInput {
+  token?: Maybe<String>;
+  vendorId?: Maybe<String>;
+}
+
+export interface VendorSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<VendorWhereInput>;
+  AND?: Maybe<VendorSubscriptionWhereInput[] | VendorSubscriptionWhereInput>;
+  OR?: Maybe<VendorSubscriptionWhereInput[] | VendorSubscriptionWhereInput>;
+  NOT?: Maybe<VendorSubscriptionWhereInput[] | VendorSubscriptionWhereInput>;
+}
+
+export interface AuthPayloadCreateInput {
+  id?: Maybe<ID_Input>;
+  token?: Maybe<String>;
+  vendor: VendorCreateOneInput;
+  vendorId: String;
 }
 
 export interface OrderSubscriptionWhereInput {
@@ -641,10 +997,98 @@ export interface OrderSubscriptionWhereInput {
   NOT?: Maybe<OrderSubscriptionWhereInput[] | OrderSubscriptionWhereInput>;
 }
 
-export interface VendorUpdateInput {
+export interface VendorCreateOneInput {
+  create?: Maybe<VendorCreateInput>;
+  connect?: Maybe<VendorWhereUniqueInput>;
+}
+
+export interface VendorWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  username?: Maybe<String>;
+  username_not?: Maybe<String>;
+  username_in?: Maybe<String[] | String>;
+  username_not_in?: Maybe<String[] | String>;
+  username_lt?: Maybe<String>;
+  username_lte?: Maybe<String>;
+  username_gt?: Maybe<String>;
+  username_gte?: Maybe<String>;
+  username_contains?: Maybe<String>;
+  username_not_contains?: Maybe<String>;
+  username_starts_with?: Maybe<String>;
+  username_not_starts_with?: Maybe<String>;
+  username_ends_with?: Maybe<String>;
+  username_not_ends_with?: Maybe<String>;
+  password?: Maybe<String>;
+  password_not?: Maybe<String>;
+  password_in?: Maybe<String[] | String>;
+  password_not_in?: Maybe<String[] | String>;
+  password_lt?: Maybe<String>;
+  password_lte?: Maybe<String>;
+  password_gt?: Maybe<String>;
+  password_gte?: Maybe<String>;
+  password_contains?: Maybe<String>;
+  password_not_contains?: Maybe<String>;
+  password_starts_with?: Maybe<String>;
+  password_not_starts_with?: Maybe<String>;
+  password_ends_with?: Maybe<String>;
+  password_not_ends_with?: Maybe<String>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  AND?: Maybe<VendorWhereInput[] | VendorWhereInput>;
+  OR?: Maybe<VendorWhereInput[] | VendorWhereInput>;
+  NOT?: Maybe<VendorWhereInput[] | VendorWhereInput>;
+}
+
+export interface VendorUpdateDataInput {
   name?: Maybe<String>;
   username?: Maybe<String>;
   password?: Maybe<String>;
+}
+
+export interface VendorUpdateOneRequiredInput {
+  create?: Maybe<VendorCreateInput>;
+  update?: Maybe<VendorUpdateDataInput>;
+  upsert?: Maybe<VendorUpsertNestedInput>;
+  connect?: Maybe<VendorWhereUniqueInput>;
+}
+
+export interface AuthPayloadUpdateInput {
+  token?: Maybe<String>;
+  vendor?: Maybe<VendorUpdateOneRequiredInput>;
+  vendorId?: Maybe<String>;
 }
 
 export interface VendorCreateInput {
@@ -654,12 +1098,15 @@ export interface VendorCreateInput {
   password: String;
 }
 
-export interface VendorCreateOneInput {
-  create?: Maybe<VendorCreateInput>;
-  connect?: Maybe<VendorWhereUniqueInput>;
+export interface DeliveryUpdateDataInput {
+  name?: Maybe<String>;
+  gender?: Maybe<String>;
+  email?: Maybe<String>;
+  phone?: Maybe<String>;
+  address?: Maybe<AddressUpdateOneRequiredInput>;
 }
 
-export interface VendorUpdateDataInput {
+export interface VendorUpdateInput {
   name?: Maybe<String>;
   username?: Maybe<String>;
   password?: Maybe<String>;
@@ -726,6 +1173,7 @@ export interface OrderWhereInput {
   currency_not_starts_with?: Maybe<String>;
   currency_ends_with?: Maybe<String>;
   currency_not_ends_with?: Maybe<String>;
+  delivery?: Maybe<DeliveryWhereInput>;
   createdAt?: Maybe<DateTimeInput>;
   createdAt_not?: Maybe<DateTimeInput>;
   createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
@@ -743,33 +1191,75 @@ export type OrderWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
 }>;
 
-export interface VendorSubscriptionWhereInput {
+export interface DeliverySubscriptionWhereInput {
   mutation_in?: Maybe<MutationType[] | MutationType>;
   updatedFields_contains?: Maybe<String>;
   updatedFields_contains_every?: Maybe<String[] | String>;
   updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<VendorWhereInput>;
-  AND?: Maybe<VendorSubscriptionWhereInput[] | VendorSubscriptionWhereInput>;
-  OR?: Maybe<VendorSubscriptionWhereInput[] | VendorSubscriptionWhereInput>;
-  NOT?: Maybe<VendorSubscriptionWhereInput[] | VendorSubscriptionWhereInput>;
-}
-
-export interface ProductUpsertNestedInput {
-  update: ProductUpdateDataInput;
-  create: ProductCreateInput;
-}
-
-export interface ProductUpdateInput {
-  name?: Maybe<String>;
-  price?: Maybe<Float>;
-  brand?: Maybe<String>;
-  size?: Maybe<Int>;
-  size_type?: Maybe<String>;
-  category?: Maybe<String>;
+  node?: Maybe<DeliveryWhereInput>;
+  AND?: Maybe<
+    DeliverySubscriptionWhereInput[] | DeliverySubscriptionWhereInput
+  >;
+  OR?: Maybe<DeliverySubscriptionWhereInput[] | DeliverySubscriptionWhereInput>;
+  NOT?: Maybe<
+    DeliverySubscriptionWhereInput[] | DeliverySubscriptionWhereInput
+  >;
 }
 
 export interface NodeNode {
   id: ID_Output;
+}
+
+export interface BatchPayload {
+  count: Long;
+}
+
+export interface BatchPayloadPromise
+  extends Promise<BatchPayload>,
+    Fragmentable {
+  count: () => Promise<Long>;
+}
+
+export interface BatchPayloadSubscription
+  extends Promise<AsyncIterator<BatchPayload>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Long>>;
+}
+
+export interface Vendor {
+  id: ID_Output;
+  name: String;
+  username: String;
+  password: String;
+  createdAt?: DateTimeOutput;
+}
+
+export interface VendorPromise extends Promise<Vendor>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  username: () => Promise<String>;
+  password: () => Promise<String>;
+  createdAt: () => Promise<DateTimeOutput>;
+}
+
+export interface VendorSubscription
+  extends Promise<AsyncIterator<Vendor>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
+  username: () => Promise<AsyncIterator<String>>;
+  password: () => Promise<AsyncIterator<String>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
+export interface VendorNullablePromise
+  extends Promise<Vendor | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  username: () => Promise<String>;
+  password: () => Promise<String>;
+  createdAt: () => Promise<DateTimeOutput>;
 }
 
 export interface VendorPreviousValues {
@@ -800,20 +1290,138 @@ export interface VendorPreviousValuesSubscription
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
-export interface OrderEdge {
-  node: Order;
+export interface AuthPayload {
+  id: ID_Output;
+  token?: String;
+  vendorId: String;
+}
+
+export interface AuthPayloadPromise extends Promise<AuthPayload>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  token: () => Promise<String>;
+  vendor: <T = VendorPromise>() => T;
+  vendorId: () => Promise<String>;
+}
+
+export interface AuthPayloadSubscription
+  extends Promise<AsyncIterator<AuthPayload>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  token: () => Promise<AsyncIterator<String>>;
+  vendor: <T = VendorSubscription>() => T;
+  vendorId: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AuthPayloadNullablePromise
+  extends Promise<AuthPayload | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  token: () => Promise<String>;
+  vendor: <T = VendorPromise>() => T;
+  vendorId: () => Promise<String>;
+}
+
+export interface AggregateVendor {
+  count: Int;
+}
+
+export interface AggregateVendorPromise
+  extends Promise<AggregateVendor>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateVendorSubscription
+  extends Promise<AsyncIterator<AggregateVendor>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface AggregateAddress {
+  count: Int;
+}
+
+export interface AggregateAddressPromise
+  extends Promise<AggregateAddress>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateAddressSubscription
+  extends Promise<AsyncIterator<AggregateAddress>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface VendorConnection {
+  pageInfo: PageInfo;
+  edges: VendorEdge[];
+}
+
+export interface VendorConnectionPromise
+  extends Promise<VendorConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<VendorEdge>>() => T;
+  aggregate: <T = AggregateVendorPromise>() => T;
+}
+
+export interface VendorConnectionSubscription
+  extends Promise<AsyncIterator<VendorConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<VendorEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateVendorSubscription>() => T;
+}
+
+export interface AddressEdge {
+  node: Address;
   cursor: String;
 }
 
-export interface OrderEdgePromise extends Promise<OrderEdge>, Fragmentable {
-  node: <T = OrderPromise>() => T;
+export interface AddressEdgePromise extends Promise<AddressEdge>, Fragmentable {
+  node: <T = AddressPromise>() => T;
   cursor: () => Promise<String>;
 }
 
-export interface OrderEdgeSubscription
-  extends Promise<AsyncIterator<OrderEdge>>,
+export interface AddressEdgeSubscription
+  extends Promise<AsyncIterator<AddressEdge>>,
     Fragmentable {
-  node: <T = OrderSubscription>() => T;
+  node: <T = AddressSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface ProductEdge {
+  node: Product;
+  cursor: String;
+}
+
+export interface ProductEdgePromise extends Promise<ProductEdge>, Fragmentable {
+  node: <T = ProductPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface ProductEdgeSubscription
+  extends Promise<AsyncIterator<ProductEdge>>,
+    Fragmentable {
+  node: <T = ProductSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface VendorEdge {
+  node: Vendor;
+  cursor: String;
+}
+
+export interface VendorEdgePromise extends Promise<VendorEdge>, Fragmentable {
+  node: <T = VendorPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface VendorEdgeSubscription
+  extends Promise<AsyncIterator<VendorEdge>>,
+    Fragmentable {
+  node: <T = VendorSubscription>() => T;
   cursor: () => Promise<AsyncIterator<String>>;
 }
 
@@ -848,6 +1456,397 @@ export interface OrderPreviousValuesSubscription
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
+export interface AggregateProduct {
+  count: Int;
+}
+
+export interface AggregateProductPromise
+  extends Promise<AggregateProduct>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateProductSubscription
+  extends Promise<AsyncIterator<AggregateProduct>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface AggregateOrder {
+  count: Int;
+}
+
+export interface AggregateOrderPromise
+  extends Promise<AggregateOrder>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateOrderSubscription
+  extends Promise<AsyncIterator<AggregateOrder>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface ProductConnection {
+  pageInfo: PageInfo;
+  edges: ProductEdge[];
+}
+
+export interface ProductConnectionPromise
+  extends Promise<ProductConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<ProductEdge>>() => T;
+  aggregate: <T = AggregateProductPromise>() => T;
+}
+
+export interface ProductConnectionSubscription
+  extends Promise<AsyncIterator<ProductConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<ProductEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateProductSubscription>() => T;
+}
+
+export interface VendorSubscriptionPayload {
+  mutation: MutationType;
+  node: Vendor;
+  updatedFields: String[];
+  previousValues: VendorPreviousValues;
+}
+
+export interface VendorSubscriptionPayloadPromise
+  extends Promise<VendorSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = VendorPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = VendorPreviousValuesPromise>() => T;
+}
+
+export interface VendorSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<VendorSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = VendorSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = VendorPreviousValuesSubscription>() => T;
+}
+
+export interface OrderEdge {
+  node: Order;
+  cursor: String;
+}
+
+export interface OrderEdgePromise extends Promise<OrderEdge>, Fragmentable {
+  node: <T = OrderPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface OrderEdgeSubscription
+  extends Promise<AsyncIterator<OrderEdge>>,
+    Fragmentable {
+  node: <T = OrderSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface Order {
+  id: ID_Output;
+  status: String;
+  quantity: Int;
+  total_cost: Float;
+  currency: String;
+  createdAt?: DateTimeOutput;
+}
+
+export interface OrderPromise extends Promise<Order>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  vendor: <T = VendorPromise>() => T;
+  product: <T = ProductPromise>() => T;
+  status: () => Promise<String>;
+  quantity: () => Promise<Int>;
+  total_cost: () => Promise<Float>;
+  currency: () => Promise<String>;
+  delivery: <T = DeliveryPromise>() => T;
+  createdAt: () => Promise<DateTimeOutput>;
+}
+
+export interface OrderSubscription
+  extends Promise<AsyncIterator<Order>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  vendor: <T = VendorSubscription>() => T;
+  product: <T = ProductSubscription>() => T;
+  status: () => Promise<AsyncIterator<String>>;
+  quantity: () => Promise<AsyncIterator<Int>>;
+  total_cost: () => Promise<AsyncIterator<Float>>;
+  currency: () => Promise<AsyncIterator<String>>;
+  delivery: <T = DeliverySubscription>() => T;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
+export interface OrderNullablePromise
+  extends Promise<Order | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  vendor: <T = VendorPromise>() => T;
+  product: <T = ProductPromise>() => T;
+  status: () => Promise<String>;
+  quantity: () => Promise<Int>;
+  total_cost: () => Promise<Float>;
+  currency: () => Promise<String>;
+  delivery: <T = DeliveryPromise>() => T;
+  createdAt: () => Promise<DateTimeOutput>;
+}
+
+export interface AddressSubscriptionPayload {
+  mutation: MutationType;
+  node: Address;
+  updatedFields: String[];
+  previousValues: AddressPreviousValues;
+}
+
+export interface AddressSubscriptionPayloadPromise
+  extends Promise<AddressSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = AddressPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = AddressPreviousValuesPromise>() => T;
+}
+
+export interface AddressSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<AddressSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = AddressSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = AddressPreviousValuesSubscription>() => T;
+}
+
+export interface DeliveryEdge {
+  node: Delivery;
+  cursor: String;
+}
+
+export interface DeliveryEdgePromise
+  extends Promise<DeliveryEdge>,
+    Fragmentable {
+  node: <T = DeliveryPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface DeliveryEdgeSubscription
+  extends Promise<AsyncIterator<DeliveryEdge>>,
+    Fragmentable {
+  node: <T = DeliverySubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AddressPreviousValues {
+  id: ID_Output;
+  street: String;
+  city: String;
+  state: String;
+  zipcode: String;
+  country: String;
+}
+
+export interface AddressPreviousValuesPromise
+  extends Promise<AddressPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  street: () => Promise<String>;
+  city: () => Promise<String>;
+  state: () => Promise<String>;
+  zipcode: () => Promise<String>;
+  country: () => Promise<String>;
+}
+
+export interface AddressPreviousValuesSubscription
+  extends Promise<AsyncIterator<AddressPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  street: () => Promise<AsyncIterator<String>>;
+  city: () => Promise<AsyncIterator<String>>;
+  state: () => Promise<AsyncIterator<String>>;
+  zipcode: () => Promise<AsyncIterator<String>>;
+  country: () => Promise<AsyncIterator<String>>;
+}
+
+export interface Delivery {
+  id: ID_Output;
+  name: String;
+  gender: String;
+  email: String;
+  phone?: String;
+  createdAt?: DateTimeOutput;
+}
+
+export interface DeliveryPromise extends Promise<Delivery>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  gender: () => Promise<String>;
+  email: () => Promise<String>;
+  phone: () => Promise<String>;
+  address: <T = AddressPromise>() => T;
+  createdAt: () => Promise<DateTimeOutput>;
+}
+
+export interface DeliverySubscription
+  extends Promise<AsyncIterator<Delivery>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
+  gender: () => Promise<AsyncIterator<String>>;
+  email: () => Promise<AsyncIterator<String>>;
+  phone: () => Promise<AsyncIterator<String>>;
+  address: <T = AddressSubscription>() => T;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
+export interface DeliveryNullablePromise
+  extends Promise<Delivery | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  gender: () => Promise<String>;
+  email: () => Promise<String>;
+  phone: () => Promise<String>;
+  address: <T = AddressPromise>() => T;
+  createdAt: () => Promise<DateTimeOutput>;
+}
+
+export interface PageInfo {
+  hasNextPage: Boolean;
+  hasPreviousPage: Boolean;
+  startCursor?: String;
+  endCursor?: String;
+}
+
+export interface PageInfoPromise extends Promise<PageInfo>, Fragmentable {
+  hasNextPage: () => Promise<Boolean>;
+  hasPreviousPage: () => Promise<Boolean>;
+  startCursor: () => Promise<String>;
+  endCursor: () => Promise<String>;
+}
+
+export interface PageInfoSubscription
+  extends Promise<AsyncIterator<PageInfo>>,
+    Fragmentable {
+  hasNextPage: () => Promise<AsyncIterator<Boolean>>;
+  hasPreviousPage: () => Promise<AsyncIterator<Boolean>>;
+  startCursor: () => Promise<AsyncIterator<String>>;
+  endCursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AuthPayloadEdge {
+  node: AuthPayload;
+  cursor: String;
+}
+
+export interface AuthPayloadEdgePromise
+  extends Promise<AuthPayloadEdge>,
+    Fragmentable {
+  node: <T = AuthPayloadPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface AuthPayloadEdgeSubscription
+  extends Promise<AsyncIterator<AuthPayloadEdge>>,
+    Fragmentable {
+  node: <T = AuthPayloadSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AuthPayloadSubscriptionPayload {
+  mutation: MutationType;
+  node: AuthPayload;
+  updatedFields: String[];
+  previousValues: AuthPayloadPreviousValues;
+}
+
+export interface AuthPayloadSubscriptionPayloadPromise
+  extends Promise<AuthPayloadSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = AuthPayloadPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = AuthPayloadPreviousValuesPromise>() => T;
+}
+
+export interface AuthPayloadSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<AuthPayloadSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = AuthPayloadSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = AuthPayloadPreviousValuesSubscription>() => T;
+}
+
+export interface Address {
+  id: ID_Output;
+  street: String;
+  city: String;
+  state: String;
+  zipcode: String;
+  country: String;
+}
+
+export interface AddressPromise extends Promise<Address>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  street: () => Promise<String>;
+  city: () => Promise<String>;
+  state: () => Promise<String>;
+  zipcode: () => Promise<String>;
+  country: () => Promise<String>;
+}
+
+export interface AddressSubscription
+  extends Promise<AsyncIterator<Address>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  street: () => Promise<AsyncIterator<String>>;
+  city: () => Promise<AsyncIterator<String>>;
+  state: () => Promise<AsyncIterator<String>>;
+  zipcode: () => Promise<AsyncIterator<String>>;
+  country: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AddressNullablePromise
+  extends Promise<Address | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  street: () => Promise<String>;
+  city: () => Promise<String>;
+  state: () => Promise<String>;
+  zipcode: () => Promise<String>;
+  country: () => Promise<String>;
+}
+
+export interface AuthPayloadPreviousValues {
+  id: ID_Output;
+  token?: String;
+  vendorId: String;
+}
+
+export interface AuthPayloadPreviousValuesPromise
+  extends Promise<AuthPayloadPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  token: () => Promise<String>;
+  vendorId: () => Promise<String>;
+}
+
+export interface AuthPayloadPreviousValuesSubscription
+  extends Promise<AsyncIterator<AuthPayloadPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  token: () => Promise<AsyncIterator<String>>;
+  vendorId: () => Promise<AsyncIterator<String>>;
+}
+
 export interface OrderConnection {
   pageInfo: PageInfo;
   edges: OrderEdge[];
@@ -869,79 +1868,82 @@ export interface OrderConnectionSubscription
   aggregate: <T = AggregateOrderSubscription>() => T;
 }
 
-export interface AuthPayloadConnection {
+export interface AddressConnection {
   pageInfo: PageInfo;
-  edges: AuthPayloadEdge[];
+  edges: AddressEdge[];
 }
 
-export interface AuthPayloadConnectionPromise
-  extends Promise<AuthPayloadConnection>,
+export interface AddressConnectionPromise
+  extends Promise<AddressConnection>,
     Fragmentable {
   pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<AuthPayloadEdge>>() => T;
-  aggregate: <T = AggregateAuthPayloadPromise>() => T;
+  edges: <T = FragmentableArray<AddressEdge>>() => T;
+  aggregate: <T = AggregateAddressPromise>() => T;
 }
 
-export interface AuthPayloadConnectionSubscription
-  extends Promise<AsyncIterator<AuthPayloadConnection>>,
+export interface AddressConnectionSubscription
+  extends Promise<AsyncIterator<AddressConnection>>,
     Fragmentable {
   pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<AuthPayloadEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateAuthPayloadSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<AddressEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateAddressSubscription>() => T;
 }
 
-export interface ProductPreviousValues {
-  id: ID_Output;
-  name: String;
-  price: Float;
-  brand: String;
-  size: Int;
-  size_type: String;
-  category: String;
-  createdAt?: DateTimeOutput;
+export interface AggregateDelivery {
+  count: Int;
 }
 
-export interface ProductPreviousValuesPromise
-  extends Promise<ProductPreviousValues>,
+export interface AggregateDeliveryPromise
+  extends Promise<AggregateDelivery>,
     Fragmentable {
-  id: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-  price: () => Promise<Float>;
-  brand: () => Promise<String>;
-  size: () => Promise<Int>;
-  size_type: () => Promise<String>;
-  category: () => Promise<String>;
-  createdAt: () => Promise<DateTimeOutput>;
+  count: () => Promise<Int>;
 }
 
-export interface ProductPreviousValuesSubscription
-  extends Promise<AsyncIterator<ProductPreviousValues>>,
+export interface AggregateDeliverySubscription
+  extends Promise<AsyncIterator<AggregateDelivery>>,
     Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  name: () => Promise<AsyncIterator<String>>;
-  price: () => Promise<AsyncIterator<Float>>;
-  brand: () => Promise<AsyncIterator<String>>;
-  size: () => Promise<AsyncIterator<Int>>;
-  size_type: () => Promise<AsyncIterator<String>>;
-  category: () => Promise<AsyncIterator<String>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  count: () => Promise<AsyncIterator<Int>>;
 }
 
-export interface VendorEdge {
-  node: Vendor;
-  cursor: String;
+export interface AggregateAuthPayload {
+  count: Int;
 }
 
-export interface VendorEdgePromise extends Promise<VendorEdge>, Fragmentable {
-  node: <T = VendorPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface VendorEdgeSubscription
-  extends Promise<AsyncIterator<VendorEdge>>,
+export interface AggregateAuthPayloadPromise
+  extends Promise<AggregateAuthPayload>,
     Fragmentable {
-  node: <T = VendorSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
+  count: () => Promise<Int>;
+}
+
+export interface AggregateAuthPayloadSubscription
+  extends Promise<AsyncIterator<AggregateAuthPayload>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface OrderSubscriptionPayload {
+  mutation: MutationType;
+  node: Order;
+  updatedFields: String[];
+  previousValues: OrderPreviousValues;
+}
+
+export interface OrderSubscriptionPayloadPromise
+  extends Promise<OrderSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = OrderPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = OrderPreviousValuesPromise>() => T;
+}
+
+export interface OrderSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<OrderSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = OrderSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = OrderPreviousValuesSubscription>() => T;
 }
 
 export interface ProductSubscriptionPayload {
@@ -969,29 +1971,102 @@ export interface ProductSubscriptionPayloadSubscription
   previousValues: <T = ProductPreviousValuesSubscription>() => T;
 }
 
-export interface VendorSubscriptionPayload {
-  mutation: MutationType;
-  node: Vendor;
-  updatedFields: String[];
-  previousValues: VendorPreviousValues;
+export interface DeliveryPreviousValues {
+  id: ID_Output;
+  name: String;
+  gender: String;
+  email: String;
+  phone?: String;
+  createdAt?: DateTimeOutput;
 }
 
-export interface VendorSubscriptionPayloadPromise
-  extends Promise<VendorSubscriptionPayload>,
+export interface DeliveryPreviousValuesPromise
+  extends Promise<DeliveryPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  gender: () => Promise<String>;
+  email: () => Promise<String>;
+  phone: () => Promise<String>;
+  createdAt: () => Promise<DateTimeOutput>;
+}
+
+export interface DeliveryPreviousValuesSubscription
+  extends Promise<AsyncIterator<DeliveryPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
+  gender: () => Promise<AsyncIterator<String>>;
+  email: () => Promise<AsyncIterator<String>>;
+  phone: () => Promise<AsyncIterator<String>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
+export interface DeliverySubscriptionPayload {
+  mutation: MutationType;
+  node: Delivery;
+  updatedFields: String[];
+  previousValues: DeliveryPreviousValues;
+}
+
+export interface DeliverySubscriptionPayloadPromise
+  extends Promise<DeliverySubscriptionPayload>,
     Fragmentable {
   mutation: () => Promise<MutationType>;
-  node: <T = VendorPromise>() => T;
+  node: <T = DeliveryPromise>() => T;
   updatedFields: () => Promise<String[]>;
-  previousValues: <T = VendorPreviousValuesPromise>() => T;
+  previousValues: <T = DeliveryPreviousValuesPromise>() => T;
 }
 
-export interface VendorSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<VendorSubscriptionPayload>>,
+export interface DeliverySubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<DeliverySubscriptionPayload>>,
     Fragmentable {
   mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = VendorSubscription>() => T;
+  node: <T = DeliverySubscription>() => T;
   updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = VendorPreviousValuesSubscription>() => T;
+  previousValues: <T = DeliveryPreviousValuesSubscription>() => T;
+}
+
+export interface AuthPayloadConnection {
+  pageInfo: PageInfo;
+  edges: AuthPayloadEdge[];
+}
+
+export interface AuthPayloadConnectionPromise
+  extends Promise<AuthPayloadConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<AuthPayloadEdge>>() => T;
+  aggregate: <T = AggregateAuthPayloadPromise>() => T;
+}
+
+export interface AuthPayloadConnectionSubscription
+  extends Promise<AsyncIterator<AuthPayloadConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<AuthPayloadEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateAuthPayloadSubscription>() => T;
+}
+
+export interface DeliveryConnection {
+  pageInfo: PageInfo;
+  edges: DeliveryEdge[];
+}
+
+export interface DeliveryConnectionPromise
+  extends Promise<DeliveryConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<DeliveryEdge>>() => T;
+  aggregate: <T = AggregateDeliveryPromise>() => T;
+}
+
+export interface DeliveryConnectionSubscription
+  extends Promise<AsyncIterator<DeliveryConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<DeliveryEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateDeliverySubscription>() => T;
 }
 
 export interface Product {
@@ -1042,381 +2117,54 @@ export interface ProductNullablePromise
   createdAt: () => Promise<DateTimeOutput>;
 }
 
-export interface PageInfo {
-  hasNextPage: Boolean;
-  hasPreviousPage: Boolean;
-  startCursor?: String;
-  endCursor?: String;
-}
-
-export interface PageInfoPromise extends Promise<PageInfo>, Fragmentable {
-  hasNextPage: () => Promise<Boolean>;
-  hasPreviousPage: () => Promise<Boolean>;
-  startCursor: () => Promise<String>;
-  endCursor: () => Promise<String>;
-}
-
-export interface PageInfoSubscription
-  extends Promise<AsyncIterator<PageInfo>>,
-    Fragmentable {
-  hasNextPage: () => Promise<AsyncIterator<Boolean>>;
-  hasPreviousPage: () => Promise<AsyncIterator<Boolean>>;
-  startCursor: () => Promise<AsyncIterator<String>>;
-  endCursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface Order {
-  id: ID_Output;
-  status: String;
-  quantity: Int;
-  total_cost: Float;
-  currency: String;
-  createdAt?: DateTimeOutput;
-}
-
-export interface OrderPromise extends Promise<Order>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  vendor: <T = VendorPromise>() => T;
-  product: <T = ProductPromise>() => T;
-  status: () => Promise<String>;
-  quantity: () => Promise<Int>;
-  total_cost: () => Promise<Float>;
-  currency: () => Promise<String>;
-  createdAt: () => Promise<DateTimeOutput>;
-}
-
-export interface OrderSubscription
-  extends Promise<AsyncIterator<Order>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  vendor: <T = VendorSubscription>() => T;
-  product: <T = ProductSubscription>() => T;
-  status: () => Promise<AsyncIterator<String>>;
-  quantity: () => Promise<AsyncIterator<Int>>;
-  total_cost: () => Promise<AsyncIterator<Float>>;
-  currency: () => Promise<AsyncIterator<String>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-}
-
-export interface OrderNullablePromise
-  extends Promise<Order | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  vendor: <T = VendorPromise>() => T;
-  product: <T = ProductPromise>() => T;
-  status: () => Promise<String>;
-  quantity: () => Promise<Int>;
-  total_cost: () => Promise<Float>;
-  currency: () => Promise<String>;
-  createdAt: () => Promise<DateTimeOutput>;
-}
-
-export interface ProductEdge {
-  node: Product;
-  cursor: String;
-}
-
-export interface ProductEdgePromise extends Promise<ProductEdge>, Fragmentable {
-  node: <T = ProductPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface ProductEdgeSubscription
-  extends Promise<AsyncIterator<ProductEdge>>,
-    Fragmentable {
-  node: <T = ProductSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface AggregateAuthPayload {
-  count: Int;
-}
-
-export interface AggregateAuthPayloadPromise
-  extends Promise<AggregateAuthPayload>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateAuthPayloadSubscription
-  extends Promise<AsyncIterator<AggregateAuthPayload>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface Vendor {
+export interface ProductPreviousValues {
   id: ID_Output;
   name: String;
-  username: String;
-  password: String;
+  price: Float;
+  brand: String;
+  size: Int;
+  size_type: String;
+  category: String;
   createdAt?: DateTimeOutput;
 }
 
-export interface VendorPromise extends Promise<Vendor>, Fragmentable {
+export interface ProductPreviousValuesPromise
+  extends Promise<ProductPreviousValues>,
+    Fragmentable {
   id: () => Promise<ID_Output>;
   name: () => Promise<String>;
-  username: () => Promise<String>;
-  password: () => Promise<String>;
+  price: () => Promise<Float>;
+  brand: () => Promise<String>;
+  size: () => Promise<Int>;
+  size_type: () => Promise<String>;
+  category: () => Promise<String>;
   createdAt: () => Promise<DateTimeOutput>;
 }
 
-export interface VendorSubscription
-  extends Promise<AsyncIterator<Vendor>>,
+export interface ProductPreviousValuesSubscription
+  extends Promise<AsyncIterator<ProductPreviousValues>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   name: () => Promise<AsyncIterator<String>>;
-  username: () => Promise<AsyncIterator<String>>;
-  password: () => Promise<AsyncIterator<String>>;
+  price: () => Promise<AsyncIterator<Float>>;
+  brand: () => Promise<AsyncIterator<String>>;
+  size: () => Promise<AsyncIterator<Int>>;
+  size_type: () => Promise<AsyncIterator<String>>;
+  category: () => Promise<AsyncIterator<String>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
-export interface VendorNullablePromise
-  extends Promise<Vendor | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-  username: () => Promise<String>;
-  password: () => Promise<String>;
-  createdAt: () => Promise<DateTimeOutput>;
-}
+/*
+The `Boolean` scalar type represents `true` or `false`.
+*/
+export type Boolean = boolean;
 
-export interface AuthPayload {
-  id: ID_Output;
-  token?: String;
-}
-
-export interface AuthPayloadPromise extends Promise<AuthPayload>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  token: () => Promise<String>;
-  vendor: <T = VendorPromise>() => T;
-}
-
-export interface AuthPayloadSubscription
-  extends Promise<AsyncIterator<AuthPayload>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  token: () => Promise<AsyncIterator<String>>;
-  vendor: <T = VendorSubscription>() => T;
-}
-
-export interface AuthPayloadNullablePromise
-  extends Promise<AuthPayload | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  token: () => Promise<String>;
-  vendor: <T = VendorPromise>() => T;
-}
-
-export interface AggregateVendor {
-  count: Int;
-}
-
-export interface AggregateVendorPromise
-  extends Promise<AggregateVendor>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateVendorSubscription
-  extends Promise<AsyncIterator<AggregateVendor>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface VendorConnection {
-  pageInfo: PageInfo;
-  edges: VendorEdge[];
-}
-
-export interface VendorConnectionPromise
-  extends Promise<VendorConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<VendorEdge>>() => T;
-  aggregate: <T = AggregateVendorPromise>() => T;
-}
-
-export interface VendorConnectionSubscription
-  extends Promise<AsyncIterator<VendorConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<VendorEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateVendorSubscription>() => T;
-}
-
-export interface OrderSubscriptionPayload {
-  mutation: MutationType;
-  node: Order;
-  updatedFields: String[];
-  previousValues: OrderPreviousValues;
-}
-
-export interface OrderSubscriptionPayloadPromise
-  extends Promise<OrderSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = OrderPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = OrderPreviousValuesPromise>() => T;
-}
-
-export interface OrderSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<OrderSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = OrderSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = OrderPreviousValuesSubscription>() => T;
-}
-
-export interface AuthPayloadEdge {
-  node: AuthPayload;
-  cursor: String;
-}
-
-export interface AuthPayloadEdgePromise
-  extends Promise<AuthPayloadEdge>,
-    Fragmentable {
-  node: <T = AuthPayloadPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface AuthPayloadEdgeSubscription
-  extends Promise<AsyncIterator<AuthPayloadEdge>>,
-    Fragmentable {
-  node: <T = AuthPayloadSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface AuthPayloadPreviousValues {
-  id: ID_Output;
-  token?: String;
-}
-
-export interface AuthPayloadPreviousValuesPromise
-  extends Promise<AuthPayloadPreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  token: () => Promise<String>;
-}
-
-export interface AuthPayloadPreviousValuesSubscription
-  extends Promise<AsyncIterator<AuthPayloadPreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  token: () => Promise<AsyncIterator<String>>;
-}
-
-export interface AuthPayloadSubscriptionPayload {
-  mutation: MutationType;
-  node: AuthPayload;
-  updatedFields: String[];
-  previousValues: AuthPayloadPreviousValues;
-}
-
-export interface AuthPayloadSubscriptionPayloadPromise
-  extends Promise<AuthPayloadSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = AuthPayloadPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = AuthPayloadPreviousValuesPromise>() => T;
-}
-
-export interface AuthPayloadSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<AuthPayloadSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = AuthPayloadSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = AuthPayloadPreviousValuesSubscription>() => T;
-}
-
-export interface AggregateProduct {
-  count: Int;
-}
-
-export interface AggregateProductPromise
-  extends Promise<AggregateProduct>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateProductSubscription
-  extends Promise<AsyncIterator<AggregateProduct>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface BatchPayload {
-  count: Long;
-}
-
-export interface BatchPayloadPromise
-  extends Promise<BatchPayload>,
-    Fragmentable {
-  count: () => Promise<Long>;
-}
-
-export interface BatchPayloadSubscription
-  extends Promise<AsyncIterator<BatchPayload>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Long>>;
-}
-
-export interface AggregateOrder {
-  count: Int;
-}
-
-export interface AggregateOrderPromise
-  extends Promise<AggregateOrder>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateOrderSubscription
-  extends Promise<AsyncIterator<AggregateOrder>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface ProductConnection {
-  pageInfo: PageInfo;
-  edges: ProductEdge[];
-}
-
-export interface ProductConnectionPromise
-  extends Promise<ProductConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<ProductEdge>>() => T;
-  aggregate: <T = AggregateProductPromise>() => T;
-}
-
-export interface ProductConnectionSubscription
-  extends Promise<AsyncIterator<ProductConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<ProductEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateProductSubscription>() => T;
-}
+export type Long = string;
 
 /*
 The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point).
 */
 export type Float = number;
-
-/*
-The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.
-*/
-export type Int = number;
-
-export type Long = string;
-
-/*
-The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
-*/
-export type String = string;
 
 /*
 DateTime scalar input type, allowing Date
@@ -1435,9 +2183,14 @@ export type ID_Input = string | number;
 export type ID_Output = string;
 
 /*
-The `Boolean` scalar type represents `true` or `false`.
+The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.
 */
-export type Boolean = boolean;
+export type Int = number;
+
+/*
+The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
+*/
+export type String = string;
 
 /**
  * Model Metadata
@@ -1458,6 +2211,14 @@ export const models: Model[] = [
   },
   {
     name: "Order",
+    embedded: false
+  },
+  {
+    name: "Delivery",
+    embedded: false
+  },
+  {
+    name: "Address",
     embedded: false
   }
 ];

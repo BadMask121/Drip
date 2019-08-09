@@ -1,19 +1,11 @@
-
-
-
 # Queries for all schema
 type Query{
-    getVendors (id : ID! ): [Vendor!]!
+    getVendors: [Vendor!]!
     getProducts: [Product!]!
     getOrders(vendorId: ID!): [Order!]!
+    getReportForOrders:[ReportOrders!]! #get orders reports with subscriptions
+    getReportForStock: [ReportStocks]! #get stock reports with subscription
 }
-
-#payload schema
-type AuthPayload{
-    token: String
-    vendor: Vendor!
-}
-
 
 # Vendors Schema
 type Vendor{
@@ -41,6 +33,48 @@ type Order{
     quantity: Int!
     total_cost: Float!
     currency: String!
+    delivery: Delivery!
+}
+
+# Delivery Schema
+type Delivery{
+    id: ID! 
+    name: String!
+    gender: String!
+    email: String!
+    phone: String
+    address: Address! 
+}
+# Address schema
+type Address{
+    id: ID! 
+    street: String!
+    city: String!
+    state: String!
+    zipcode: String!
+    country: String!
+}
+#payload schema
+type AuthPayload{
+    token: String
+    vendor: Vendor!
+}
+
+
+
+#Reporting Schemas
+
+# Products Reporting Schema
+type ReportStocks{
+    id:ID!
+    vendor:[Vendor!]!
+    product:[Product!]!
+}
+# Orders Report Schema
+type ReportOrders{
+    id:ID!
+    vendor:[Vendor!]!
+    orders:[Order!]!
 }
 
 
@@ -70,22 +104,39 @@ input inputOrder{
     quantity: Int!
     total_cost: Int!
     currency: String!
+    address: inputAddress!
 }
-
-# inputVendorOrder for querying vendor in making order
+# Address schema
+input inputDelivery{
+    name: String!
+    gender: String!
+    email: String!
+    phone: String
+    address: inputAddress! 
+}
+# inputAddress for mutating address in making order
+input inputAddress{
+    street: String!
+    city: String!
+    state: String!
+    zipcode: String!
+    country: String!
+}
+# inputVendorOrder for mutating vendor in making order
 input inputVendorOrder {
      id: ID!
 }
-
-# inputProductOrder for querying product in making order
-input inputProductOrder {
+# inputProductOrder for mutating uniqueOrder in making order
+input inputProductUniqueOrder {
+    id: ID!
+}
+# inputAddressUniqueOrder for mutating uniqueAdress in making order
+input inputAddressUniqueOrder {
     id: ID!
 }
 
 
-
-
-
+# Mutations schema
 type Mutation{
 
     addProduct(
@@ -109,15 +160,16 @@ type Mutation{
     ): AuthPayload!
 
     loginVendor(
-        username: String!
-        password: String!
+        username: String!,
+        password: String!,
     ): AuthPayload!
 
     makeOrder(
-        product: inputProductOrder!,
+        product: inputProductUniqueOrder!,
         status: String!,
-        quantity: Int!
-        total_cost: Int!
-        currency: String!
+        quantity: Int!,
+        total_cost: Int!,
+        currency: String!,
+        delivery: inputDelivery!
     ):Order!
 }

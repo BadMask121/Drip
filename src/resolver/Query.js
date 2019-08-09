@@ -4,7 +4,7 @@
  */
 
 async function getVendors($, args, context, info) {
-    return await context.prisma.Vendors()
+    return await context.prisma.vendors()
 }
 
 async function getProducts($, args, context, info) {
@@ -14,7 +14,6 @@ async function getProducts($, args, context, info) {
 async function getOrders($, args, context, info){
     return await context.prisma.orders()
 }
-
 
 /**
  * 

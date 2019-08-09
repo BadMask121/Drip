@@ -6,7 +6,8 @@ const {
 } = require('../../misc/error/errorHandler')
 const {
     getVendorId,
-    insertToken
+    insertToken,
+    checkOrderSupportedRequest
 } = require('../../misc/helpers')
 
 
@@ -26,7 +27,7 @@ const {
 module.exports = async function makeOrder($, args, context, info) {
 
     //check if vendor is authorized to trade
-    const getVendorAuthorizedId= getVendorId(context)
+    const getVendorAuthorizedId= await getVendorId(context)
         if(!getVendorId)
             throw new NullException("Vendor not authorized to host orders")
     
@@ -34,39 +35,62 @@ module.exports = async function makeOrder($, args, context, info) {
     const vendor = await context.prisma.vendor({
         id: getVendorAuthorizedId
     })
-    
-        if(!vendor)
+        if (!vendor || vendor.length <= 0)
             throw new NullException("Vendor not found")
     
+    //check if product requested for is available
     const products = await context.prisma.products({
         where: {
-            name: args.product.name
+            id: args.product.id
         }
     })
-    
-        if(products.length === [])
-            throw new NullException(`${args.product.name} out of stock`)
+        if (!products || products.length <= 0)
+            throw new NullException(`Product Id: ${args.product.id} out of stock`)
 
-    
+
+
+    /**
+     *  after checking for vendor and product availability 
+     *  we need now do validation for the data sent to api
+     */
+    if (!checkOrderSupportedRequest("status",  args.status))
+        throw new NullException(`Status '${args.status}' not supported`)
+    if (!checkOrderSupportedRequest("gender", args.delivery.gender))
+         throw new NullException(`Gender '${args.delivery.gender}' not supported`)
+    if (!checkOrderSupportedRequest("currency", args.currency))
+          throw new NullException(`Currency '${args.currency}' not supported`)
+
+          
+          
+    //finally create buyers order
     const makeOrder = await context.prisma.createOrder({
-        // ...args,
         vendor:{
             connect:{
                 id: vendor.id
             }
         },
+         product: {
+             connect: {
+                 id: args.product.id
+             }
+         },
         status: args.status,
         quantity: args.quantity,
         total_cost: args.total_cost,
         currency: args.currency,
-        product:{
-            connect:{
-                id: args.product.id
+        delivery:{
+            create:{
+                ...args.delivery,
+                address: {
+                    create:{
+                        ...args.delivery.address
+                    }
+                }
             }
         }
     })
 
-        if (!makeOrder)
+        if (!makeOrder || makeOrder.length <= 0)
             throw new ErrorHandler("Order couldnt be placed")
 
     return makeOrder

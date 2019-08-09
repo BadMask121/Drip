@@ -3,8 +3,9 @@
 
 type AuthPayload{
     id: ID! @id
-    token: String
-    vendor: Vendor!
+    token: String @unique
+    vendor: Vendor! @unique
+    vendorId: String! @unique
 }
 
 type Vendor {
@@ -28,11 +29,31 @@ type Product{
 
 type Order{
     id: ID! @id
-    vendor: Vendor @relation( name: "Vendor")
-    product: Product @relation( name: "Product")
+    vendor: Vendor @relation(name: "Vendor")
+    product: Product @relation(name: "Product")
     status: String!
     quantity: Int!
     total_cost: Float!
     currency: String!
+    delivery: Delivery! @relation(name: "Delivery")
     createdAt: DateTime @createdAt
+}
+
+type Delivery{
+    id: ID! @id
+    name: String!
+    gender: String!
+    email: String!
+    phone: String
+    address: Address! @relation(name: "Address")
+    createdAt: DateTime @createdAt
+}
+
+type Address{
+    id: ID! @id
+    street: String!
+    city: String!
+    state: String!
+    zipcode: String!
+    country: String!
 }
