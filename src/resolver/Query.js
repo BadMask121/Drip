@@ -18,7 +18,7 @@ async function getOrders($, args, context, info){
 /**
  * 
  * @Todo 
- * @To add other single and many query resolvers
+ * @To add other one to many query resolvers
  */
 
 module.exports = {
