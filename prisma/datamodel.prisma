@@ -13,6 +13,7 @@ type Vendor {
     name: String!
     username: String! @unique
     password: String!
+    orders: [Order] @relation(name: "Order")
     createdAt: DateTime @createdAt
 }
 
@@ -29,8 +30,8 @@ type Product{
 
 type Order{
     id: ID! @id
-    vendor: Vendor @relation(name: "Vendor")
-    product: Product @relation(name: "Product")
+    vendor: Vendor! @relation(name: "Vendor")
+    product: Product! @relation(name: "Product")
     status: String!
     quantity: Int!
     total_cost: Float!

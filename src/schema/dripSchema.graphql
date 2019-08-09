@@ -2,10 +2,10 @@
 type Query{
     getVendors: [Vendor!]!
     getProducts: [Product!]!
-    getOrders(vendorId: ID!): [Order!]!
+    getOrders: [ReportOrders]!
     getReportForOrders:[ReportOrders!]! #get orders reports with subscriptions
-    getReportForStock: [ReportStocks]! #get stock reports with subscription
 }
+
 
 # Vendors Schema
 type Vendor{
@@ -13,6 +13,7 @@ type Vendor{
     name: String!
     username: String!
     password: String!
+    orders: [Order]
 }
 # Product Schema
 type Product{
@@ -73,8 +74,9 @@ type ReportStocks{
 # Orders Report Schema
 type ReportOrders{
     id:ID!
-    vendor:[Vendor!]!
-    orders:[Order!]!
+    vendor:[Vendor]
+    product:[Product]
+    orders:[Order]
 }
 
 
@@ -105,6 +107,12 @@ input inputOrder{
     total_cost: Int!
     currency: String!
     address: inputAddress!
+}
+
+# inp
+input inputVendorQuery{
+    id: ID!
+    name: String
 }
 # Address schema
 input inputDelivery{
