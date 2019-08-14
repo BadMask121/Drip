@@ -1,7 +1,7 @@
 # Queries for all schema
 type Query{
     getVendors: [Vendor!]!
-    getProducts: [Product!]!
+    getProducts (name:String): [Product!]!
     orders: [Order]!
     filterOrdersByDate(
       filter: String!

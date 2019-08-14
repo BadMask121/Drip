@@ -5,14 +5,18 @@ const {
 } = require('../../misc/error/errorHandler')
 
 module.exports = async function getProducts($, args, context, info) {
-    return await context.prisma.products()
-        // if (!products || products.length <= 0)
-        //     throw new NullException("Sorry! theres no product to sell")
+    let product = {}
+    if(!args){
+        product = await context.prisma.products()
+    }
 
-    // const count = await context.prisma.productsConnection({products}).aggregate().count()
-    
-    // return {
-    //     products,
-    //     count
-    // }
+    product = await context.prisma.products({
+        where:{
+            name: args.name
+        }
+    })
+        if (!product || product.length <= 0)
+            throw new NullException("Sorry! theres no product on stock")
+
+    return product
 }
