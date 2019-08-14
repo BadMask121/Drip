@@ -1,9 +1,15 @@
 async function vendor($, args, context, info){
-    return await context.prisma.vendor({id: $.id}).orders()
+      const orders = await context.prisma.order({
+          id: $.id
+      }).vendor()
+      return orders
 }
 
 async function product($, args, context, info) {
-    return await context.prisma.product({id: $.id}).orders()
+    const orders = await context.prisma.order({
+        id: $.id
+    }).product()
+    return orders
 }
 
 module.exports = {

@@ -14,6 +14,7 @@ type Vendor {
     username: String! @unique
     password: String!
     orders: [Order] @relation(name: "Order")
+    product: [Product]
     createdAt: DateTime @createdAt
 }
 
@@ -26,12 +27,13 @@ type Product{
     size_type: String!
     category: String!
     createdAt: DateTime @createdAt
+    vendor: [Vendor] 
 }
 
 type Order{
     id: ID! @id
     vendor: Vendor! @relation(name: "Vendor")
-    product: Product! @relation(name: "Product")
+    product: Product!
     status: String!
     quantity: Int!
     total_cost: Float!
@@ -57,4 +59,7 @@ type Address{
     state: String!
     zipcode: String!
     country: String!
+    orders: [Order] 
 }
+
+

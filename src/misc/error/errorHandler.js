@@ -1,5 +1,6 @@
 const InvalidException = require('./InvalidException')
 const NullException = require('./NullException')
+const NotAuthorized = require('./NotAuthorized')
 
 class ErrorHandler extends Error{
 
@@ -21,5 +22,6 @@ class ErrorHandler extends Error{
 module.exports = {
     ErrorHandler,
     InvalidException,
-    NullException
+    NullException,
+    NotAuthorized
 }

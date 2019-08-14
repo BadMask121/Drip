@@ -96,6 +96,14 @@ async function getVendorId (context) {
 }
 
 
+//unused function
+function customSerializeDate(args){
+    let getDateFromQuery = args;
+    getDateFromQuery = getDateFromQuery.split('-')
+    getDateFromQuery = getDateFromQuery[0] + getDateFromQuery[1] +  getDateFromQuery[2].substring(0, 2);
+
+    return getDateFromQuery
+}
 /**
  *  defining values that will be only accepted by our apis
  */
@@ -156,5 +164,6 @@ module.exports = {
     getVendorId,
     insertToken,
     updateToken,
-    checkOrderSupportedRequest
+    checkOrderSupportedRequest,
+    customSerializeDate
 }

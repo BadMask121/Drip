@@ -2,8 +2,10 @@
 type Query{
     getVendors: [Vendor!]!
     getProducts: [Product!]!
-    getOrders: [ReportOrders]!
-    getReportForOrders:[ReportOrders!]! #get orders reports with subscriptions
+    orders: [Order]!
+    filterOrdersByDate(
+      filter: String!
+    ):[ReportOrders!]! #get orders reports with subscriptions
 }
 
 
@@ -12,8 +14,8 @@ type Vendor{
     id: ID!
     name: String!
     username: String!
-    password: String!
     orders: [Order]
+    product: [Product]
 }
 # Product Schema
 type Product{
@@ -24,12 +26,13 @@ type Product{
     size: Int!
     size_type: String!
     category: String!
+    vendor: [Vendor]
 }
 # Order Schema
 type Order{
     id: ID!
-    vendor: Vendor!
-    product: Product!
+    vendor: Vendor
+    product: Product
     status: String!
     quantity: Int!
     total_cost: Float!
@@ -73,10 +76,15 @@ type ReportStocks{
 }
 # Orders Report Schema
 type ReportOrders{
-    id:ID!
-    vendor:[Vendor]
-    product:[Product]
-    orders:[Order]
+    id:ID
+    vendor:Vendor
+    product:Product
+    status: String
+    quantity: Int!
+    total_cost: Float!
+    currency: String!
+    delivery: Delivery!
+    # stock: ReportStocks
 }
 
 

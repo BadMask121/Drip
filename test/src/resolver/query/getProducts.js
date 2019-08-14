@@ -14,6 +14,10 @@ it('Test querying all products', async () => {
                     }
                 `
     })
+
+    const getProductsData = JSON.parse(getProducts.text)
+    
     expect(getProducts).to.be.not.null;
     expect(getProducts).to.have.status(200);
+    expect(getProductsData).to.have.ownProperty("data").to.not.equal("null")
 })
