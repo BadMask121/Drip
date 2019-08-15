@@ -10,7 +10,6 @@ module.exports = {
   state: String!
   zipcode: String!
   country: String!
-  orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order!]
 }
 
 type AddressConnection {
@@ -26,7 +25,6 @@ input AddressCreateInput {
   state: String!
   zipcode: String!
   country: String!
-  orders: OrderCreateManyInput
 }
 
 input AddressCreateOneInput {
@@ -87,7 +85,6 @@ input AddressUpdateDataInput {
   state: String
   zipcode: String
   country: String
-  orders: OrderUpdateManyInput
 }
 
 input AddressUpdateInput {
@@ -96,7 +93,6 @@ input AddressUpdateInput {
   state: String
   zipcode: String
   country: String
-  orders: OrderUpdateManyInput
 }
 
 input AddressUpdateManyMutationInput {
@@ -204,9 +200,6 @@ input AddressWhereInput {
   country_not_starts_with: String
   country_ends_with: String
   country_not_ends_with: String
-  orders_every: OrderWhereInput
-  orders_some: OrderWhereInput
-  orders_none: OrderWhereInput
   AND: [AddressWhereInput!]
   OR: [AddressWhereInput!]
   NOT: [AddressWhereInput!]
@@ -632,6 +625,7 @@ type Order {
   currency: String!
   delivery: Delivery!
   createdAt: DateTime
+  count: Int
 }
 
 type OrderConnection {
@@ -649,11 +643,7 @@ input OrderCreateInput {
   total_cost: Float!
   currency: String!
   delivery: DeliveryCreateOneInput!
-}
-
-input OrderCreateManyInput {
-  create: [OrderCreateInput!]
-  connect: [OrderWhereUniqueInput!]
+  count: Int
 }
 
 input OrderCreateManyWithoutVendorInput {
@@ -669,6 +659,7 @@ input OrderCreateWithoutVendorInput {
   total_cost: Float!
   currency: String!
   delivery: DeliveryCreateOneInput!
+  count: Int
 }
 
 type OrderEdge {
@@ -689,6 +680,8 @@ enum OrderOrderByInput {
   currency_DESC
   createdAt_ASC
   createdAt_DESC
+  count_ASC
+  count_DESC
 }
 
 type OrderPreviousValues {
@@ -698,6 +691,7 @@ type OrderPreviousValues {
   total_cost: Float!
   currency: String!
   createdAt: DateTime
+  count: Int
 }
 
 input OrderScalarWhereInput {
@@ -767,6 +761,14 @@ input OrderScalarWhereInput {
   createdAt_lte: DateTime
   createdAt_gt: DateTime
   createdAt_gte: DateTime
+  count: Int
+  count_not: Int
+  count_in: [Int!]
+  count_not_in: [Int!]
+  count_lt: Int
+  count_lte: Int
+  count_gt: Int
+  count_gte: Int
   AND: [OrderScalarWhereInput!]
   OR: [OrderScalarWhereInput!]
   NOT: [OrderScalarWhereInput!]
@@ -790,16 +792,6 @@ input OrderSubscriptionWhereInput {
   NOT: [OrderSubscriptionWhereInput!]
 }
 
-input OrderUpdateDataInput {
-  vendor: VendorUpdateOneRequiredWithoutOrdersInput
-  product: ProductUpdateOneRequiredInput
-  status: String
-  quantity: Int
-  total_cost: Float
-  currency: String
-  delivery: DeliveryUpdateOneRequiredInput
-}
-
 input OrderUpdateInput {
   vendor: VendorUpdateOneRequiredWithoutOrdersInput
   product: ProductUpdateOneRequiredInput
@@ -808,6 +800,7 @@ input OrderUpdateInput {
   total_cost: Float
   currency: String
   delivery: DeliveryUpdateOneRequiredInput
+  count: Int
 }
 
 input OrderUpdateManyDataInput {
@@ -815,18 +808,7 @@ input OrderUpdateManyDataInput {
   quantity: Int
   total_cost: Float
   currency: String
-}
-
-input OrderUpdateManyInput {
-  create: [OrderCreateInput!]
-  update: [OrderUpdateWithWhereUniqueNestedInput!]
-  upsert: [OrderUpsertWithWhereUniqueNestedInput!]
-  delete: [OrderWhereUniqueInput!]
-  connect: [OrderWhereUniqueInput!]
-  set: [OrderWhereUniqueInput!]
-  disconnect: [OrderWhereUniqueInput!]
-  deleteMany: [OrderScalarWhereInput!]
-  updateMany: [OrderUpdateManyWithWhereNestedInput!]
+  count: Int
 }
 
 input OrderUpdateManyMutationInput {
@@ -834,6 +816,7 @@ input OrderUpdateManyMutationInput {
   quantity: Int
   total_cost: Float
   currency: String
+  count: Int
 }
 
 input OrderUpdateManyWithoutVendorInput {
@@ -860,22 +843,12 @@ input OrderUpdateWithoutVendorDataInput {
   total_cost: Float
   currency: String
   delivery: DeliveryUpdateOneRequiredInput
-}
-
-input OrderUpdateWithWhereUniqueNestedInput {
-  where: OrderWhereUniqueInput!
-  data: OrderUpdateDataInput!
+  count: Int
 }
 
 input OrderUpdateWithWhereUniqueWithoutVendorInput {
   where: OrderWhereUniqueInput!
   data: OrderUpdateWithoutVendorDataInput!
-}
-
-input OrderUpsertWithWhereUniqueNestedInput {
-  where: OrderWhereUniqueInput!
-  update: OrderUpdateDataInput!
-  create: OrderCreateInput!
 }
 
 input OrderUpsertWithWhereUniqueWithoutVendorInput {
@@ -954,6 +927,14 @@ input OrderWhereInput {
   createdAt_lte: DateTime
   createdAt_gt: DateTime
   createdAt_gte: DateTime
+  count: Int
+  count_not: Int
+  count_in: [Int!]
+  count_not_in: [Int!]
+  count_lt: Int
+  count_lte: Int
+  count_gt: Int
+  count_gte: Int
   AND: [OrderWhereInput!]
   OR: [OrderWhereInput!]
   NOT: [OrderWhereInput!]
@@ -979,7 +960,7 @@ type Product {
   size_type: String!
   category: String!
   createdAt: DateTime
-  vendor(where: VendorWhereInput, orderBy: VendorOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Vendor!]
+  count: Int
 }
 
 type ProductConnection {
@@ -996,27 +977,12 @@ input ProductCreateInput {
   size: Int!
   size_type: String!
   category: String!
-  vendor: VendorCreateManyWithoutProductInput
-}
-
-input ProductCreateManyWithoutVendorInput {
-  create: [ProductCreateWithoutVendorInput!]
-  connect: [ProductWhereUniqueInput!]
+  count: Int
 }
 
 input ProductCreateOneInput {
   create: ProductCreateInput
   connect: ProductWhereUniqueInput
-}
-
-input ProductCreateWithoutVendorInput {
-  id: ID
-  name: String!
-  price: Float!
-  brand: String!
-  size: Int!
-  size_type: String!
-  category: String!
 }
 
 type ProductEdge {
@@ -1041,6 +1007,8 @@ enum ProductOrderByInput {
   category_DESC
   createdAt_ASC
   createdAt_DESC
+  count_ASC
+  count_DESC
 }
 
 type ProductPreviousValues {
@@ -1052,106 +1020,7 @@ type ProductPreviousValues {
   size_type: String!
   category: String!
   createdAt: DateTime
-}
-
-input ProductScalarWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  name: String
-  name_not: String
-  name_in: [String!]
-  name_not_in: [String!]
-  name_lt: String
-  name_lte: String
-  name_gt: String
-  name_gte: String
-  name_contains: String
-  name_not_contains: String
-  name_starts_with: String
-  name_not_starts_with: String
-  name_ends_with: String
-  name_not_ends_with: String
-  price: Float
-  price_not: Float
-  price_in: [Float!]
-  price_not_in: [Float!]
-  price_lt: Float
-  price_lte: Float
-  price_gt: Float
-  price_gte: Float
-  brand: String
-  brand_not: String
-  brand_in: [String!]
-  brand_not_in: [String!]
-  brand_lt: String
-  brand_lte: String
-  brand_gt: String
-  brand_gte: String
-  brand_contains: String
-  brand_not_contains: String
-  brand_starts_with: String
-  brand_not_starts_with: String
-  brand_ends_with: String
-  brand_not_ends_with: String
-  size: Int
-  size_not: Int
-  size_in: [Int!]
-  size_not_in: [Int!]
-  size_lt: Int
-  size_lte: Int
-  size_gt: Int
-  size_gte: Int
-  size_type: String
-  size_type_not: String
-  size_type_in: [String!]
-  size_type_not_in: [String!]
-  size_type_lt: String
-  size_type_lte: String
-  size_type_gt: String
-  size_type_gte: String
-  size_type_contains: String
-  size_type_not_contains: String
-  size_type_starts_with: String
-  size_type_not_starts_with: String
-  size_type_ends_with: String
-  size_type_not_ends_with: String
-  category: String
-  category_not: String
-  category_in: [String!]
-  category_not_in: [String!]
-  category_lt: String
-  category_lte: String
-  category_gt: String
-  category_gte: String
-  category_contains: String
-  category_not_contains: String
-  category_starts_with: String
-  category_not_starts_with: String
-  category_ends_with: String
-  category_not_ends_with: String
-  createdAt: DateTime
-  createdAt_not: DateTime
-  createdAt_in: [DateTime!]
-  createdAt_not_in: [DateTime!]
-  createdAt_lt: DateTime
-  createdAt_lte: DateTime
-  createdAt_gt: DateTime
-  createdAt_gte: DateTime
-  AND: [ProductScalarWhereInput!]
-  OR: [ProductScalarWhereInput!]
-  NOT: [ProductScalarWhereInput!]
+  count: Int
 }
 
 type ProductSubscriptionPayload {
@@ -1179,7 +1048,7 @@ input ProductUpdateDataInput {
   size: Int
   size_type: String
   category: String
-  vendor: VendorUpdateManyWithoutProductInput
+  count: Int
 }
 
 input ProductUpdateInput {
@@ -1189,16 +1058,7 @@ input ProductUpdateInput {
   size: Int
   size_type: String
   category: String
-  vendor: VendorUpdateManyWithoutProductInput
-}
-
-input ProductUpdateManyDataInput {
-  name: String
-  price: Float
-  brand: String
-  size: Int
-  size_type: String
-  category: String
+  count: Int
 }
 
 input ProductUpdateManyMutationInput {
@@ -1208,23 +1068,7 @@ input ProductUpdateManyMutationInput {
   size: Int
   size_type: String
   category: String
-}
-
-input ProductUpdateManyWithoutVendorInput {
-  create: [ProductCreateWithoutVendorInput!]
-  delete: [ProductWhereUniqueInput!]
-  connect: [ProductWhereUniqueInput!]
-  set: [ProductWhereUniqueInput!]
-  disconnect: [ProductWhereUniqueInput!]
-  update: [ProductUpdateWithWhereUniqueWithoutVendorInput!]
-  upsert: [ProductUpsertWithWhereUniqueWithoutVendorInput!]
-  deleteMany: [ProductScalarWhereInput!]
-  updateMany: [ProductUpdateManyWithWhereNestedInput!]
-}
-
-input ProductUpdateManyWithWhereNestedInput {
-  where: ProductScalarWhereInput!
-  data: ProductUpdateManyDataInput!
+  count: Int
 }
 
 input ProductUpdateOneRequiredInput {
@@ -1234,29 +1078,9 @@ input ProductUpdateOneRequiredInput {
   connect: ProductWhereUniqueInput
 }
 
-input ProductUpdateWithoutVendorDataInput {
-  name: String
-  price: Float
-  brand: String
-  size: Int
-  size_type: String
-  category: String
-}
-
-input ProductUpdateWithWhereUniqueWithoutVendorInput {
-  where: ProductWhereUniqueInput!
-  data: ProductUpdateWithoutVendorDataInput!
-}
-
 input ProductUpsertNestedInput {
   update: ProductUpdateDataInput!
   create: ProductCreateInput!
-}
-
-input ProductUpsertWithWhereUniqueWithoutVendorInput {
-  where: ProductWhereUniqueInput!
-  update: ProductUpdateWithoutVendorDataInput!
-  create: ProductCreateWithoutVendorInput!
 }
 
 input ProductWhereInput {
@@ -1354,9 +1178,14 @@ input ProductWhereInput {
   createdAt_lte: DateTime
   createdAt_gt: DateTime
   createdAt_gte: DateTime
-  vendor_every: VendorWhereInput
-  vendor_some: VendorWhereInput
-  vendor_none: VendorWhereInput
+  count: Int
+  count_not: Int
+  count_in: [Int!]
+  count_not_in: [Int!]
+  count_lt: Int
+  count_lte: Int
+  count_gt: Int
+  count_gte: Int
   AND: [ProductWhereInput!]
   OR: [ProductWhereInput!]
   NOT: [ProductWhereInput!]
@@ -1403,7 +1232,6 @@ type Vendor {
   username: String!
   password: String!
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order!]
-  product(where: ProductWhereInput, orderBy: ProductOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Product!]
   createdAt: DateTime
 }
 
@@ -1419,12 +1247,6 @@ input VendorCreateInput {
   username: String!
   password: String!
   orders: OrderCreateManyWithoutVendorInput
-  product: ProductCreateManyWithoutVendorInput
-}
-
-input VendorCreateManyWithoutProductInput {
-  create: [VendorCreateWithoutProductInput!]
-  connect: [VendorWhereUniqueInput!]
 }
 
 input VendorCreateOneInput {
@@ -1442,15 +1264,6 @@ input VendorCreateWithoutOrdersInput {
   name: String!
   username: String!
   password: String!
-  product: ProductCreateManyWithoutVendorInput
-}
-
-input VendorCreateWithoutProductInput {
-  id: ID
-  name: String!
-  username: String!
-  password: String!
-  orders: OrderCreateManyWithoutVendorInput
 }
 
 type VendorEdge {
@@ -1479,76 +1292,6 @@ type VendorPreviousValues {
   createdAt: DateTime
 }
 
-input VendorScalarWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  name: String
-  name_not: String
-  name_in: [String!]
-  name_not_in: [String!]
-  name_lt: String
-  name_lte: String
-  name_gt: String
-  name_gte: String
-  name_contains: String
-  name_not_contains: String
-  name_starts_with: String
-  name_not_starts_with: String
-  name_ends_with: String
-  name_not_ends_with: String
-  username: String
-  username_not: String
-  username_in: [String!]
-  username_not_in: [String!]
-  username_lt: String
-  username_lte: String
-  username_gt: String
-  username_gte: String
-  username_contains: String
-  username_not_contains: String
-  username_starts_with: String
-  username_not_starts_with: String
-  username_ends_with: String
-  username_not_ends_with: String
-  password: String
-  password_not: String
-  password_in: [String!]
-  password_not_in: [String!]
-  password_lt: String
-  password_lte: String
-  password_gt: String
-  password_gte: String
-  password_contains: String
-  password_not_contains: String
-  password_starts_with: String
-  password_not_starts_with: String
-  password_ends_with: String
-  password_not_ends_with: String
-  createdAt: DateTime
-  createdAt_not: DateTime
-  createdAt_in: [DateTime!]
-  createdAt_not_in: [DateTime!]
-  createdAt_lt: DateTime
-  createdAt_lte: DateTime
-  createdAt_gt: DateTime
-  createdAt_gte: DateTime
-  AND: [VendorScalarWhereInput!]
-  OR: [VendorScalarWhereInput!]
-  NOT: [VendorScalarWhereInput!]
-}
-
 type VendorSubscriptionPayload {
   mutation: MutationType!
   node: Vendor
@@ -1572,7 +1315,6 @@ input VendorUpdateDataInput {
   username: String
   password: String
   orders: OrderUpdateManyWithoutVendorInput
-  product: ProductUpdateManyWithoutVendorInput
 }
 
 input VendorUpdateInput {
@@ -1580,36 +1322,12 @@ input VendorUpdateInput {
   username: String
   password: String
   orders: OrderUpdateManyWithoutVendorInput
-  product: ProductUpdateManyWithoutVendorInput
-}
-
-input VendorUpdateManyDataInput {
-  name: String
-  username: String
-  password: String
 }
 
 input VendorUpdateManyMutationInput {
   name: String
   username: String
   password: String
-}
-
-input VendorUpdateManyWithoutProductInput {
-  create: [VendorCreateWithoutProductInput!]
-  delete: [VendorWhereUniqueInput!]
-  connect: [VendorWhereUniqueInput!]
-  set: [VendorWhereUniqueInput!]
-  disconnect: [VendorWhereUniqueInput!]
-  update: [VendorUpdateWithWhereUniqueWithoutProductInput!]
-  upsert: [VendorUpsertWithWhereUniqueWithoutProductInput!]
-  deleteMany: [VendorScalarWhereInput!]
-  updateMany: [VendorUpdateManyWithWhereNestedInput!]
-}
-
-input VendorUpdateManyWithWhereNestedInput {
-  where: VendorScalarWhereInput!
-  data: VendorUpdateManyDataInput!
 }
 
 input VendorUpdateOneRequiredInput {
@@ -1630,19 +1348,6 @@ input VendorUpdateWithoutOrdersDataInput {
   name: String
   username: String
   password: String
-  product: ProductUpdateManyWithoutVendorInput
-}
-
-input VendorUpdateWithoutProductDataInput {
-  name: String
-  username: String
-  password: String
-  orders: OrderUpdateManyWithoutVendorInput
-}
-
-input VendorUpdateWithWhereUniqueWithoutProductInput {
-  where: VendorWhereUniqueInput!
-  data: VendorUpdateWithoutProductDataInput!
 }
 
 input VendorUpsertNestedInput {
@@ -1653,12 +1358,6 @@ input VendorUpsertNestedInput {
 input VendorUpsertWithoutOrdersInput {
   update: VendorUpdateWithoutOrdersDataInput!
   create: VendorCreateWithoutOrdersInput!
-}
-
-input VendorUpsertWithWhereUniqueWithoutProductInput {
-  where: VendorWhereUniqueInput!
-  update: VendorUpdateWithoutProductDataInput!
-  create: VendorCreateWithoutProductInput!
 }
 
 input VendorWhereInput {
@@ -1721,9 +1420,6 @@ input VendorWhereInput {
   orders_every: OrderWhereInput
   orders_some: OrderWhereInput
   orders_none: OrderWhereInput
-  product_every: ProductWhereInput
-  product_some: ProductWhereInput
-  product_none: ProductWhereInput
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]

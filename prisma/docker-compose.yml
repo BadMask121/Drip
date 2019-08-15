@@ -14,7 +14,7 @@ services:
             host: mysql
             port: 3306
             user: root
-            password: efemena1
+            password: prisma
   mysql:
     image: mysql:5.7
     restart: always

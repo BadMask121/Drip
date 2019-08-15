@@ -12,7 +12,15 @@ async function product($, args, context, info) {
     return orders
 }
 
+async function delivery($, args, context, info) {
+    const orders = await context.prisma.order({
+        id: $.id
+    }).delivery()
+    return orders
+}
+
 module.exports = {
     vendor,
-    product
+    product,
+    delivery
 }
